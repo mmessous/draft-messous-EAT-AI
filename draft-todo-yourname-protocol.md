@@ -19,8 +19,8 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: Entity Attestation Token (EAT) Profile for AI Integrity in Network Functions
+abbrev: EAT-AI-4-NET
 category: info
 
 docname: draft-todo-yourname-protocol-latest
