@@ -23,7 +23,7 @@ title: Entity Attestation Token (EAT) Profile for AI Integrity in Network Functi
 abbrev: EAT-AI-4-NET
 category: info
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-messous-EAT-AI-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
