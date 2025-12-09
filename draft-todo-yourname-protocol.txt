@@ -8,7 +8,8 @@ Intended status: Informational                           9 December 2025
 Expires: 12 June 2026
 
 
-                           TODO - Your title
+   Entity Attestation Token (EAT) Profile for AI Integrity in Network
+                               Functions
                   draft-todo-yourname-protocol-latest
 
 Abstract
