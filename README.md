@@ -4,7 +4,7 @@
 
 This is the working area for the individual Internet-Draft, "Entity Attestation Token (EAT) Profile for Autonomous AI Agents".
 
-* [Editor's Copy](https://github.com/mmessous/draft-messous-EAT-AI)
+* [Editor's Copy](https://github.com/mmessous/draft-messous-EAT-AI/blob/main/draft-messous-eat-ai.md)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-messous-eat-ai)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-messous-eat-ai)
 * [Compare Editor's Copy to Individual Draft](...)
