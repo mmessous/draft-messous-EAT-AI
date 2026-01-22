@@ -26,9 +26,9 @@ latest: ....
 
 
 
-author:
+authors:
  -
-    fullname: Ayoub MESSOUS
+    fullname: Ayoub MESSOUS, Lionel MORAND
     organization: Huawei R&D
     email: ayoub.messous@huawei.com
 
@@ -211,11 +211,11 @@ This document complements:
 It differs from [I-D.huang-rats-agentic-eat-cap-attest](#idRatsAgentiEAT) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
 
 # Acknowledgments
-The author thanks the ETSI ENI ISG and IETF RATS WG for their foundational work on AI trust and remote attestation.
+The authors thanks the ETSI ENI ISG and IETF RATS WG for their foundational work on AI trust and remote attestation.
 
 
 
 Authors' Address:
-Ayoub MESSOUS
+Ayoub MESSOUS, Lionel MORAND
 Huawei
 Email: ayoub.messous@huawei.com
