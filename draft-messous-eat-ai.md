@@ -55,7 +55,7 @@ This profile enables verifiers—such as OAuth resource servers, network functio
 
 ## 2. Terminology
 
-- **AI Agent**: An autonomous software entity that performs perception, reasoning, and action.
+- **AI Agent**: AI agents are autonomous systems powered by Large Language Models (LLMs) that can reason, plan, use tools, maintain memory, and take actions to accomplish goals. (PCL: Accoring to OWASP: https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html)
 - **Model Integrity**: The property that AI model weights and architecture have not been altered from a known-good state.
 - **Training Provenance**: Metadata describing the origin, scope, and privacy properties of data used to train an AI model.
 - **Inference Policy**: Constraints defining the authorized input context (e.g., slice type, geography) under which an agent may operate.
@@ -66,7 +66,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 ## 3. Use Cases
 
 ### 3.1. Generic AI Agent Attestation
-An enterprise AI agent attests its model hash and data retention policy before accessing a protected API.
+An enterprise AI agent attests its model hash and data retention policy before accessing a protected API. For a more extensive protection, attestation target could also include behaviorial manifests, identity, prompts, tools and capabilities, SBOM/AIBOMs etc in the future.
 
 ### 3.2. 5G/6G Network Functions (Optional Context)
 In ETSI ENI AI-Core, an Execution Agent generates instructions for network slice configuration. The agent must prove:
@@ -94,6 +94,10 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `owner-id` | -75009 | `owner_id` | text | Identity of principal (e.g., GPSI per 3GPP TS 29.222) |
 | `capabilities` | -75010 | `capabilities` | array of text | High-level functions (e.g., `"slice-optimization"`) |
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
+
+(PCL): Would each ai-model-id have a different urn registration? How would this part operate? Should model owner do the submit through some flexible/dynamic methods, or RFC-like methods?URN are long-term preserved registries usually registered through RFCs but I dont know if that is the best way.
+(PCL): Do you need another AI-BOM? Or this itself _is_ an AIBOM? Would be non-AI regular SBOMs be necessary?
+(PCL): I see these claims might be attested by different owners? Or should 1 owner/verifier attest them all?
 
 ### 4.2. Optional Domain-Specific Claims (5G/6G)
 
