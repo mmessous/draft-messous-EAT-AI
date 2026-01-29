@@ -94,6 +94,8 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `owner-id` | -75009 | `owner_id` | text | Identity of principal (e.g., GPSI per 3GPP TS 29.222) |
 | `capabilities` | -75010 | `capabilities` | array of text | High-level functions (e.g., `"slice-optimization"`) |
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
+| `ai-sbom-ref`| -75012 | |`ai_sbom_ref`| text / map| Reference to a Software Bill of Materials (SBOM) describing the AI agent’s runtime dependencies (e.g., Python, CUDA, libraries). MAY be a URI, digest, or embedded SBOM fragment|
+
 
 
 The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
@@ -109,6 +111,31 @@ where:
 In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
 In **JWT** (JSON), it is represented as a JSON object: { "alg": "...", "hash": "base64url-encoded-hash" }.
 This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
+
+
+
+The `ai-sbom-ref` claim provides a reference to the **Software Bill of Materials (SBOM)** associated with the AI agent. This enables verifiers to assess the integrity, license compliance, and vulnerability status of the agent’s software supply chain.
+The value MAY be:
+- A URI pointing to an SBOM document (e.g., in SPDX or CycloneDX format),
+- A digest (using the structured digest format defined in Section 4.1) of an SBOM,
+- Or a compact embedded representation (e.g., a minimal map of critical components).
+
+Example (CBOR):
+```
+cbor
+/ ai-sbom-ref / -75012: "https://example.com/sboms/agent-xyz.spdx.json"
+```
+Example (embedded digest):
+```
+cbor
+/ ai-sbom-ref / -75012: [ -44, h'abcd1234...' ]  ; SHA-384 digest of SBOM
+```
+When used, the SBOM SHOULD include:
+- Runtime environment (e.g., Python 3.11, CUDA 12.4),
+- AI framework versions (e.g., PyTorch 2.3, TensorFlow 2.15),
+- Critical dependencies (e.g., NumPy, cuDNN),
+- Model serialization format (e.g., ONNX v9, SafeTensors v0.4).
+This claim complements model integrity (`ai-model-hash`) by attesting to the execution context in which the model operates—critical for reproducibility and security analysis.
 
 
 
@@ -141,16 +168,86 @@ A single platform (e.g., UE with `ueid`) may host multiple agents. Each agent is
 
 Core and optional claims MAY appear in submodules, but not at top level unless attesting a single-agent system.
 
+### 4.4. Multi-Model Support via `submods`
+
+Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from [RFC 9711]. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
+
+#### 4.3.1. Submodule Claims-Set for Models
+When a model is represented in a submodule, it carries its own instance of `ai-model-id` and `ai-model-hash`. If the model weights are proprietary (e.g., accessed via a cloud API), the submodule SHOULD include an `ai-model-id` that the Verifier can match against a provider Endorsement.
+
+#### 4.3.2. Example: Multi-Model Agent (CWT Diagnostic)
+The following example demonstrates an agent employing an orchestrator LLM and a specialized vision model. Note the use of the digest format [alg, val] to support different hash types for each model.
+
+Code snippet
+```
+{
+  / ueid / 256: h'0102030405060708',
+  / nonce / 10: h'abcdef1234567890',
+  / submods / 266: {
+    "orchestrator-llm": {
+      / ai-model-id / 750: "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+      / ai-model-hash / 751: [7, h'9a8b7c6d...']  / SHA-384 /
+    },
+    "vision-classifier": {
+      / ai-model-id / 750: "urn:ietf:ai:model:vit-b-16",
+      / ai-model-hash / 751: [1, h'5e4f3a2b...'], / SHA-256 /
+      / dp-epsilon / 755: 0.8
+    }
+  }
+}
+```
+#### 4.3.2. Nested Multi-Agent and Multi-Model Attestation
+
+To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the submods claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
+
+The following CWT diagnostic example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
+
+Code snippet
+```
+{
+  / ueid / 256: h'0102030405060708',  / User/Platform ID /
+  / nonce / 10: h'abcdef1234567890', / Freshness Nonce /
+  / submods / 266: {                 / Submodules Section /
+    
+    / --- Agent 1: Multi-Model Orchestrator --- /
+    "agent-1": {
+      / swname / 270: "Orchestrator-Agent-v2",
+      / submods / 266: {             / Nested Model Submodules /
+        "llm-core": {
+          / ai-model-id / 750: "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+          / ai-model-hash / 751: [7, h'9a8b...']  / SHA-384 /
+        },
+        "tool-planner": {
+          / ai-model-id / 750: "urn:uuid:550e8400-e29b-41d4-a716-446655440000",
+          / ai-model-hash / 751: [1, h'5e4f...']  / SHA-256 /
+        }
+      }
+    },
+
+    / --- Agent 2: Single-Model Worker --- /
+    "agent-2": {
+      / swname / 270: "Vision-Worker-v1",
+      / ai-model-id / 750: "urn:ietf:ai:model:vit-b-16", /
+      / ai-model-hash / 751: [7, h'd3e2...']            /
+    }
+  }
+}
+```
+
 ## 5. Security Considerations 
 - All claims MAY be bound to a hardware-rooted attestation (e.g., TEE) via standard EAT platform claims (ueid, oemid, dbgstat).
 - ***ai-model-hash*** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
 - **Verifiers** SHOULD validate claims against authoritative registries (e.g., model hash in secure model catalog).
 - ***Replay attacks*** SHOULD be mitigated using EAT nonce (CWT key 10) or exp (key 4).
+- Verifiers SHOULD validate the referenced SBOM against known vulnerability databases (e.g., NVD) and reject agents using components with unpatched critical flaws.
+
 
 ## 6. Privacy Considerations
-training-geo-region reveals data origin and SHOULD be minimized.
-EAT tokens SHOULD be transmitted over secure channels (e.g., TLS 1.3).
-owner-id SHOULD use pseudonymous identifiers (e.g., GPSI per 3GPP TS 29.222).
+- training-geo-region reveals data origin and SHOULD be minimized.
+- EAT tokens SHOULD be transmitted over secure channels (e.g., TLS 1.3).
+- owner-id SHOULD use pseudonymous identifiers (e.g., GPSI per 3GPP TS 29.222).
+- Embedded SBOMs or detailed URIs may reveal deployment topology. When privacy is a concern, use opaque digests or pseudonymized SBOM identifiers.
+
 
 ## 7. IANA Considerations
 ## 7.1. EAT Profile Registration
@@ -176,8 +273,9 @@ IANA is requested to register the following in the "CBOR Web Token (CWT) Claims"
 |-75009 |`owner-id` |Resource owner identifier|
 |-75010 |`capabilities` |Agent capabilities|
 |-75011 |`allowed-apis` |Allowed API endpoints|
+|-75012 | `ai-sbom-ref` | Reference to AI agent’s Software Bill of Materials (SBOM)|
 
-The range -75000 to -75011 is reserved for this profile.
+The range -75000 to -75012 is reserved for this profile.
 
 ### 7.3. JWT Claims Registry
 IANA is requested to register the corresponding JWT claim names in the "JSON Web Token Claims" registry [IANA-JWT].
@@ -215,10 +313,11 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 / ueid / 10: h'0102030405060708',
 / sw-name / 256: "execution-agent-v3",
 / ai-model-id / -75000: "urn:etsi:eni:model:slice-opt-cnn:v3",
-/ ai-model-hash / -75001: h'9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f',
+/ ai-model-hash / -75001: [-44,h'9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f'],
 / training-geo-region / -75004: ["DE", "FR"],
 / dp-epsilon / -75005: 0.5,
-/ input-policy-digest / -75006: h'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0',
+/ input-policy-digest / -75006: [-44,h'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0'],
+/ ai-sbom-ref / -75012: "https://sbom.example.net/agents/slice-opt-v3.spdx.json",
 / nonce / 19: h'abcdef1234567890'
 }
 ```
