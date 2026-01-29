@@ -53,6 +53,10 @@ This profile enables verifiers—such as OAuth resource servers, network functio
 - **Training provenance** (dataset, geography, privacy),
 - **Runtime authorization** (capabilities, allowed APIs, slice types).
 
+This profile does not define a full AI Bill of Materials (AIBOM). Instead, it provides a minimal set of **verifiable claims** sufficient for remote attestation and policy enforcement. It assumes that richer metadata—such as detailed training data lineage, model cards, or complete dependency graphs—is maintained in external documents (e.g., an AIBOM or SBOM), which may be referenced via claims like `ai-sbom-ref` or a future `ai-bom-ref`.
+Traditional SBOMs remain essential to capture the **software supply chain** (e.g., Python, CUDA, framework versions) on which the AI agent depends. This profile complements, but does not replace, those artifacts.
+
+
 ## 2. Terminology
 
 - **AI Agent**: AI agents are autonomous systems powered by Large Language Models (LLMs) that can reason, plan, use tools, maintain memory, and take actions to accomplish goals. (PCL: Accoring to OWASP: https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html)
@@ -247,6 +251,8 @@ Code snippet
 - ***Replay attacks*** SHOULD be mitigated using EAT nonce (CWT key 10) or exp (key 4).
 - Verifiers SHOULD validate the referenced SBOM against known vulnerability databases (e.g., NVD) and reject agents using components with unpatched critical flaws.
 - Verifiers SHOULD validate that `ai-model-id` values originate from trusted namespaces (e.g., known domains, approved PENs, or allow-listed UUIDs). Dynamic model deployment does not require central registration, but policy enforcement may restrict acceptable namespaces.
+- Verifiers are expected to combine EAT-AI evidence with external SBOM/AIBOM analysis for comprehensive risk assessment.
+
 
 ## 6. Privacy Considerations
 - training-geo-region reveals data origin and SHOULD be minimized.
