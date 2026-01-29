@@ -69,7 +69,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 An enterprise AI agent attests its model hash and data retention policy before accessing a protected API. For a more extensive protection, attestation target could also include behaviorial manifests, identity, prompts, tools and capabilities, SBOM/AIBOMs etc in the future.
 
 ### 3.2. 5G/6G Network Functions (Optional Context)
-In ETSI ENI AI-Core, an Execution Agent generates instructions for network slice configuration. The agent must prove:
+In ETSI ENI AI-Core, an Execution Agent generates instructions for network slice configuration. The agent should prove:
 - It runs an approved model (`ai-model-hash`),
 - It was trained on GDPR-compliant data (`training-geo-region`, `dp-epsilon`),
 - It is authorized for specific slice types (`allowed-slice-types`).
@@ -85,15 +85,32 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | Claim Name | CBOR Key | JWT Name | Type | Description |
 |-----------|----------|--------|------|-------------|
 | `ai-model-id` | -75000 | `ai_model_id` | text | URN-formatted model identifier (e.g., `urn:ietf:ai:model:cnn-v3`) |
-| `ai-model-hash` | -75001 | `ai_model_hash` | bstr | SHA-384 hash of serialized model weights |
-| `model-arch-digest` | -75002 | `model_arch_digest` | bstr | SHA-384 hash of model computational graph |
+| `ai-model-hash` | -75001 | `ai_model_hash` | digest | Cryptographic hash of the serialized model weights and architecture |
+| `model-arch-digest` | -75002 | `model_arch_digest` | digest |  Cryptographic hash of model computational graph |
 | `training-data-id` | -75003 | `training_data_id` | text | Unique ID of training dataset |
 | `dp-epsilon` | -75005 | `dp_epsilon` | float | Differential privacy epsilon used during training |
-| `input-policy-digest` | -75006 | `input_policy_digest` | bstr | SHA-384 hash of inference input policy |
+| `input-policy-digest` | -75006 | `input_policy_digest` | digest |  Cryptographic hash of inference input policy |
 | `data-retention-policy` | -75008 | `data_retention_policy` | text | e.g., `"none"`, `"session"`, `"24h"` |
 | `owner-id` | -75009 | `owner_id` | text | Identity of principal (e.g., GPSI per 3GPP TS 29.222) |
 | `capabilities` | -75010 | `capabilities` | array of text | High-level functions (e.g., `"slice-optimization"`) |
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
+
+
+The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
+A digest structure is encoded as a two-element array:
+
+```cbor
+[ alg, hash ]
+```
+where:
+ * **alg** is the Hash Algorithm Identifier (either an integer from the [_IANA COSE Algorithms registry_(https://www.iana.org/assignments/named-information/named-information.xhtml)] or a text string representing the Hash Name String), indicating the hash function used (e.g., _11_ for SHA-384, _10_ for SHA3-256);
+ * **hash** is the byte string output of applying that hash function to the canonical serialization of the artifact.
+
+In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
+In **JWT** (JSON), it is represented as a JSON object: { "alg": "...", "hash": "base64url-encoded-hash" }.
+This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
+
+
 
 (PCL): Would each ai-model-id have a different urn registration? How would this part operate? Should model owner do the submit through some flexible/dynamic methods, or RFC-like methods?URN are long-term preserved registries usually registered through RFCs but I dont know if that is the best way.
 (PCL): Do you need another AI-BOM? Or this itself _is_ an AIBOM? Would be non-AI regular SBOMs be necessary?
@@ -106,7 +123,7 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `training-geo-region` | -75004 | `training_geo_region` | array of text | ISO 3166-1 alpha-2 codes (e.g., `["DE", "FR"]`) |
 | `allowed-slice-types` | -75007 | `allowed_slice_types` | array of text | 3GPP-defined slice types (e.g., `"eMBB"`, `"URLLC"`) |
 
-> **Usage**: These claims **MUST only be used** when attesting agents in **ETSI ENI or 3GPP SBA** environments.
+> **Usage**: These claims **SHOULD be used** when attesting agents in **ETSI ENI or 3GPP SBA** environments.
 
 ### 4.3. Multi-Agent Support via `submods`
 
@@ -125,10 +142,10 @@ A single platform (e.g., UE with `ueid`) may host multiple agents. Each agent is
 Core and optional claims MAY appear in submodules, but not at top level unless attesting a single-agent system.
 
 ## 5. Security Considerations 
-- All claims MUST be bound to a hardware-rooted attestation (e.g., TEE) via standard EAT platform claims (ueid, oemid, dbgstat).
-- ***ai-model-hash*** MUST be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
-- **Verifiers** MUST validate claims against authoritative registries (e.g., model hash in secure model catalog).
-- ***Replay attacks*** MUST be mitigated using EAT nonce (CWT key 10) or exp (key 4).
+- All claims MAY be bound to a hardware-rooted attestation (e.g., TEE) via standard EAT platform claims (ueid, oemid, dbgstat).
+- ***ai-model-hash*** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
+- **Verifiers** SHOULD validate claims against authoritative registries (e.g., model hash in secure model catalog).
+- ***Replay attacks*** SHOULD be mitigated using EAT nonce (CWT key 10) or exp (key 4).
 
 ## 6. Privacy Considerations
 training-geo-region reveals data origin and SHOULD be minimized.
@@ -176,6 +193,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - [[RFC9711](https://datatracker.ietf.org/doc/html/rfc9711)] L. Lundblade, G. Mandyam,J. O'Donoghue,C. Wallace, "The Entity Attestation Token (EAT)", RFC 9711, April 2025 ISSN:2070-1721.
 - <a name="rats"> [[RFC9334](https://datatracker.ietf.org/doc/html/rfc9334)] </a>  Birkett, M., et al., "Remote ATtestation ProcedureS (RATS) Architecture", RFC 9334, DOI 10.17487/RFC9334, January 2023.
 - [[RFC8126](https://datatracker.ietf.org/doc/html/rfc8126)]  Cotton, M., et al., "Guidelines for Writing an IANA Considerations Section in RFCs", RFC 8126, DOI 10.17487/RFC8126, June 2017.
+- [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
 
 
 ### 8.2. Informative References
@@ -183,7 +201,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - <a name="etsi">[[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] </a> ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
 - [[3GPP-TR-33.898](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088)] 3GPP, **"Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"**, TR 33.898, V18.0.1  July 2023. 
 - [[3GPP-TR-33.784](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294)] 3GPP, **"Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"**, TR 33.784 V0.0.0, April 2025. 
-- <a name="idRatsAgentiEAT">[[I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/)] </a> Huang, L., et al., **"Capability Attestation Extensions for the Entity Attestation Token (EAT) in Agentic AI Systems"**, Work in Progress, Internet-Draft, March 2025.
+- <a name="idRatsAgentiEAT">[[I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/)] </a> Huang, K., et al., **"Capability Attestation Extensions for the Entity Attestation Token (EAT) in Agentic AI Systems"**, Work in Progress, Internet-Draft, March 2025.
 - [[draft-ni-wimse-ai-agent-identity](https://datatracker.ietf.org/doc/draft-ni-wimse-ai-agent-identity/)] Yuan, N., Liu, P., **"WIMSE Applicability for AI Agents"**, Work in Progress.
 - [[draft-liu-oauth-a2a-profile](https://datatracker.ietf.org/doc/draft-liu-oauth-a2a-profile/)] Liu, P., Yuan, N., **"Agent-to-Agent (A2A) Profile for OAuth Transaction Tokens"**, Work in Progress.
 
