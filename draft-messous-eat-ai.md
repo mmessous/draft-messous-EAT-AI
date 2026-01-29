@@ -96,9 +96,15 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
 | `ai-sbom-ref`| -75012 | |`ai_sbom_ref`| text / map| Reference to a Software Bill of Materials (SBOM) describing the AI agent’s runtime dependencies (e.g., Python, CUDA, libraries). MAY be a URI, digest, or embedded SBOM fragment|
 
+### 4.1. ai-model-id
+- `ai-model-id`: A globally unique model identifier encoded as a URN. The URN **namespace** `urn:ietf:ai:model:` is reserved for standardized reference models (e.g., defined in RFCs). **Model owners SHOULD use their own URN namespace** (e.g., based on domain name, PEN, or UUID) to avoid central coordination.
+Examples:
+  - `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6` (for a private model)
+  - `urn:ietf:ai:model:llama3-8b` (for a well-known public model, if later standardized)
+  - `urn:dev:example.com:finance-agent-v2` (enterprise-owned model)
 
-
-The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
+### 4.2. use of cryptopgraphu digests
+- The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
 A digest structure is encoded as a two-element array:
 
 ```cbor
@@ -109,12 +115,12 @@ where:
  * **hash** is the byte string output of applying that hash function to the canonical serialization of the artifact.
 
 In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
-In **JWT** (JSON), it is represented as a JSON object: { "alg": "...", "hash": "base64url-encoded-hash" }.
+In **JWT** (JSON), it is represented as a JSON object: `{ "alg": "...", "hash": "base64url-encoded-hash" }`.
 This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
 
 
-
-The `ai-sbom-ref` claim provides a reference to the **Software Bill of Materials (SBOM)** associated with the AI agent. This enables verifiers to assess the integrity, license compliance, and vulnerability status of the agent’s software supply chain.
+### 4.3. ai-sbom-ref
+- The `ai-sbom-ref` claim provides a reference to the **Software Bill of Materials (SBOM)** associated with the AI agent. This enables verifiers to assess the integrity, license compliance, and vulnerability status of the agent’s software supply chain.
 The value MAY be:
 - A URI pointing to an SBOM document (e.g., in SPDX or CycloneDX format),
 - A digest (using the structured digest format defined in Section 4.1) of an SBOM,
@@ -240,7 +246,7 @@ Code snippet
 - **Verifiers** SHOULD validate claims against authoritative registries (e.g., model hash in secure model catalog).
 - ***Replay attacks*** SHOULD be mitigated using EAT nonce (CWT key 10) or exp (key 4).
 - Verifiers SHOULD validate the referenced SBOM against known vulnerability databases (e.g., NVD) and reject agents using components with unpatched critical flaws.
-
+- Verifiers SHOULD validate that `ai-model-id` values originate from trusted namespaces (e.g., known domains, approved PENs, or allow-listed UUIDs). Dynamic model deployment does not require central registration, but policy enforcement may restrict acceptable namespaces.
 
 ## 6. Privacy Considerations
 - training-geo-region reveals data origin and SHOULD be minimized.
@@ -251,7 +257,9 @@ Code snippet
 
 ## 7. IANA Considerations
 ## 7.1. EAT Profile Registration
-IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
+- IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
+- IANA is requested to register the URN namespace identifier `ai:model` under the `urn:ietf` tree, for use in standardized AI model identifiers. This registration does **not** imply that all model identifiers require IANA or IETF approval.
+
 
 Profile Name: Autonomous AI Agent EAT Profile
 Profile URI: urn:ietf:eat:profile:ai-agent:1
