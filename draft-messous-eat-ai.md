@@ -70,7 +70,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 ## 3. Use Cases
 
 ### 3.1. Generic AI Agent Attestation
-An enterprise AI agent attests its model hash and data retention policy before accessing a protected API. For a more extensive protection, attestation target could also include behaviorial manifests, identity, prompts, tools and capabilities, SBOM/AIBOMs etc in the future.
+An enterprise AI agent attests its model hash and data retention policy before accessing a protected API. For a more extensive protection, attestation target could also include behavioral manifests, identity, prompts, tools and capabilities, SBOM/AIBOMs etc in the future.
 
 ### 3.2. 5G/6G Network Functions (Optional Context)
 In ETSI ENI AI-Core, an Execution Agent generates instructions for network slice configuration. The agent should prove:
@@ -98,16 +98,16 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `owner-id` | -75009 | `owner_id` | text | Identity of principal (e.g., GPSI per 3GPP TS 29.222) |
 | `capabilities` | -75010 | `capabilities` | array of text | High-level functions (e.g., `"slice-optimization"`) |
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
-| `ai-sbom-ref`| -75012 | |`ai_sbom_ref`| text / map| Reference to a Software Bill of Materials (SBOM) describing the AI agent’s runtime dependencies (e.g., Python, CUDA, libraries). MAY be a URI, digest, or embedded SBOM fragment|
+| `ai-sbom-ref`| -75012 | `ai_sbom_ref` | text / map| Reference to a Software Bill of Materials (SBOM) describing the AI agent’s runtime dependencies (e.g., Python, CUDA, libraries). MAY be a URI, digest, or embedded SBOM fragment|
 
-### 4.1. ai-model-id
+#### 4.1.1. ai-model-id
 - `ai-model-id`: A globally unique model identifier encoded as a URN. The URN **namespace** `urn:ietf:ai:model:` is reserved for standardized reference models (e.g., defined in RFCs). **Model owners SHOULD use their own URN namespace** (e.g., based on domain name, PEN, or UUID) to avoid central coordination.
 Examples:
   - `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6` (for a private model)
   - `urn:ietf:ai:model:llama3-8b` (for a well-known public model, if later standardized)
   - `urn:dev:example.com:finance-agent-v2` (enterprise-owned model)
 
-### 4.2. use of cryptopgraphu digests
+#### 4.1.2. use of cryptography digests
 - The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
 A digest structure is encoded as a two-element array:
 
@@ -115,7 +115,7 @@ A digest structure is encoded as a two-element array:
 [ alg, hash ]
 ```
 where:
- * **alg** is the Hash Algorithm Identifier (either an integer from the [_IANA COSE Algorithms registry_(https://www.iana.org/assignments/named-information/named-information.xhtml)] or a text string representing the Hash Name String), indicating the hash function used (e.g., _11_ for SHA-384, _10_ for SHA3-256);
+ * **alg** is the Hash Algorithm Identifier, using either the **integer** or **text string** from the [IANA COSE Algorithms registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms), indicating the hash function used (e.g., '-16' for SHA-256, `-44` for SHA-384, `-45` for SHA3-256).
  * **hash** is the byte string output of applying that hash function to the canonical serialization of the artifact.
 
 In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
@@ -123,7 +123,7 @@ In **JWT** (JSON), it is represented as a JSON object: `{ "alg": "...", "hash": 
 This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
 
 
-### 4.3. ai-sbom-ref
+#### 4.1.3. ai-sbom-ref
 - The `ai-sbom-ref` claim provides a reference to the **Software Bill of Materials (SBOM)** associated with the AI agent. This enables verifiers to assess the integrity, license compliance, and vulnerability status of the agent’s software supply chain.
 The value MAY be:
 - A URI pointing to an SBOM document (e.g., in SPDX or CycloneDX format),
@@ -147,14 +147,6 @@ When used, the SBOM SHOULD include:
 - Model serialization format (e.g., ONNX v9, SafeTensors v0.4).
 This claim complements model integrity (`ai-model-hash`) by attesting to the execution context in which the model operates—critical for reproducibility and security analysis.
 
-
-```
-PCL
-(PCL): Would each ai-model-id have a different urn registration? How would this part operate? Should model owner do the submit through some flexible/dynamic methods, or RFC-like methods?URN are long-term preserved registries usually registered through RFCs but I dont know if that is the best way.
-(PCL): Do you need another AI-BOM? Or this itself _is_ an AIBOM? Would be non-AI regular SBOMs be necessary?
-(PCL): I see these claims might be attested by different owners? Or should 1 owner/verifier attest them all?
-```
-
 ### 4.2. Optional Domain-Specific Claims (5G/6G)
 
 | Claim Name | CBOR Key | JWT Name | Type | Description |
@@ -164,55 +156,15 @@ PCL
 
 > **Usage**: These claims **SHOULD be used** when attesting agents in **ETSI ENI or 3GPP SBA** environments.
 
-### 4.3. Multi-Agent Support via `submods`
+### 4.3. Composite and Multi-Component Attestation
 
-A single platform (e.g., UE with `ueid`) may host multiple agents. Each agent is represented as a **submodule** under the `submods` claim (CBOR key **266**, per [RFC9711]):
+This profile utilizes the recursive nesting capability of the submods claim (Key 266) to support three specific composite scenarios:
 
-```cbor
-{
-  / ueid / 256: h'ABCD...',
-  / submods / 266: {
-    "agent-1": { -75000: "model-A", -75010: ["slice-opt"], ... },
-    "agent-2": { -75000: "model-B", -75007: ["URLLC"], ... }
-  }
-}
-```
-
-Core and optional claims MAY appear in submodules, but not at top level unless attesting a single-agent system.
-
-### 4.4. Multi-Model Support via `submods`
-
-Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from [RFC 9711]. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
-
-#### 4.4.1. Submodule Claims-Set for Models
-When a model is represented in a submodule, it carries its own instance of `ai-model-id` and `ai-model-hash`. If the model weights are proprietary (e.g., accessed via a cloud API), the submodule SHOULD include an `ai-model-id` that the Verifier can match against a provider Endorsement.
-
-#### 4.4.2. Example: Multi-Model Agent (CWT Diagnostic)
-The following example demonstrates an agent employing an orchestrator LLM and a specialized vision model. Note the use of the digest format [alg, val] to support different hash types for each model.
-
-Code snippet
-```
-{
-  / ueid / 256: h'0102030405060708',
-  / nonce / 10: h'abcdef1234567890',
-  / submods / 266: {
-    "orchestrator-llm": {
-      / ai-model-id / 750: "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-      / ai-model-hash / 751: [7, h'9a8b7c6d...']  / SHA-384 /
-    },
-    "vision-classifier": {
-      / ai-model-id / 750: "urn:ietf:ai:model:vit-b-16",
-      / ai-model-hash / 751: [1, h'5e4f3a2b...'], / SHA-256 /
-      / dp-epsilon / 755: 0.8
-    }
-  }
-}
-```
-#### 4.3. Nested Multi-Agent and Multi-Model Attestation
+#### 4.3.1. Multi-Agent Platforms:
 
 To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the `submods` claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
 
-The following CWT diagnostic example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
+The following CWT example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one. 
 
 Code snippet
 ```
@@ -226,12 +178,12 @@ Code snippet
       / swname / 270: "Orchestrator-Agent-v2",
       / submods / 266: {             / Nested Model Submodules /
         "llm-core": {
-          / ai-model-id / 750: "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
-          / ai-model-hash / 751: [7, h'9a8b...']  / SHA-384 /
+          / ai-model-id / -75000: ":uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+          / ai-model-hash / -75001: [-44, h'9a8b...']  / SHA-384 /
         },
         "tool-planner": {
-          / ai-model-id / 750: "urn:uuid:550e8400-e29b-41d4-a716-446655440000",
-          / ai-model-hash / 751: [1, h'5e4f...']  / SHA-256 /
+          / ai-model-id / -75000: ":uuid:550e8400-e29b-41d4-a716-446655440000",
+          / ai-model-hash / -75001: [-16, h'5e4f...']  / SHA-256 /
         }
       }
     },
@@ -239,23 +191,53 @@ Code snippet
     / --- Agent 2: Single-Model Worker --- /
     "agent-2": {
       / swname / 270: "Vision-Worker-v1",
-      / ai-model-id / 750: "urn:ietf:ai:model:vit-b-16", /
-      / ai-model-hash / 751: [7, h'd3e2...']            /
+      / ai-model-id / -75000: ":ietf:ai:model:vit-b-16", /
+      / ai-model-hash / -75001: [-44, h'd3e2...']            /
     }
   }
 }
 ```
-### 4.5. Support for Composite and Layered Attestation
-This profile supports composite attestation where different system components (e.g., hardware TEE, OS runtime, and AI model) are owned or managed by different entities.
 
-- **Nesting Mechanism:** Components SHOULD be represented as nested EATs within the submods claim (Key 266). Each nested token MAY be signed by a different attestation key belonging to the respective component owner.
+#### 4.3.2. Multi-Model Agents:
+A single agent utilizing an orchestrator model and task-specific worker models.
 
-- **Verifier Role:** A Verifier receiving a composite EAT SHOULD follow the Hierarchical Pattern, where it acts as a Lead Verifier and delegates the appraisal of individual submodules to specialized verifiers that hold the appropriate Trust Anchors for each owner.
+Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from [RFC 9711]. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
 
+When a model is represented in a submodule, it carries its own instance of `ai-model-id` and `ai-model-hash`. If the model weights are proprietary (e.g., accessed via a cloud API), the submodule SHOULD include an `ai-model-id` that the Verifier can match against a provider Endorsement.
+
+The following example demonstrates an agent employing an orchestrator LLM and a specialized vision model. Note the use of the digest format [alg, val] to support different hash types for each model.
+
+Code snippet
+```
+{
+  / ueid / 256: h'0102030405060708',
+  / nonce / 10: h'abcdef1234567890',
+  / submods / 266: {
+    "orchestrator-llm": {
+      / ai-model-id / -75000: ":uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+      / ai-model-hash / -75001: [-44, h'9a8b7c6d...']  / SHA-384 /
+    },
+    "vision-classifier": {
+      / ai-model-id / -75000: ":ietf:ai:model:vit-b-16",
+      / ai-model-hash / -75001: [-16, h'5e4f3a2b...'], / SHA-256 /
+      / dp-epsilon / -75005: 0.8
+    }
+  }
+}
+```
+
+#### 4.3.3. Layered Trust:
+Scenarios where different system components (e.g., hardware TEE, OS runtime, and AI model) are owned or managed by different entities.
+
+ - **Nesting Mechanism:** Components SHOULD be represented as nested EATs within the submods claim (Key 266). Each nested token MAY be signed by a different attestation key belonging to the respective component owner.
+
+ - **Verifier Role:** A Verifier receiving a composite EAT SHOULD follow the Hierarchical Pattern, where it acts as a Lead Verifier and delegates the appraisal of individual submodules to specialized verifiers that hold the appropriate Trust Anchors for each owner.
+
+For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchical Pattern**, extracting nested sub-tokens and delegating their appraisal to specialized verifiers holding the appropriate Trust Anchors.
 
 ## 5. Security Considerations 
-- All claims MAY be bound to a hardware-rooted attestation (e.g., TEE) via standard EAT platform claims (ueid, oemid, dbgstat).
-- ***ai-model-hash*** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
+- Claims SHOULD be bound to a hardware-rooted attestation where available.
+- **`ai-model-hash`** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
 - **Verifiers** SHOULD validate claims against authoritative registries (e.g., model hash in secure model catalog).
 - ***Replay attacks*** SHOULD be mitigated using EAT nonce (CWT key 10) or exp (key 4).
 - Verifiers SHOULD validate the referenced SBOM against known vulnerability databases (e.g., NVD) and reject agents using components with unpatched critical flaws.
@@ -273,8 +255,7 @@ This profile supports composite attestation where different system components (e
 ## 7. IANA Considerations
 ## 7.1. EAT Profile Registration
 - IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
-- IANA is requested to register the URN namespace identifier `ai:model` under the `urn:ietf` tree, for use in standardized AI model identifiers. This registration does **not** imply that all model identifiers require IANA or IETF approval.
-
+- IANA is requested to register the URN namespace identifier `ai:model` under the `:ietf` tree, for use in standardized AI model identifiers. This registration does **not** imply that all model identifiers require IANA or IETF approval. The string `ai:model` is used in examples to denote standardized models. This document does not request a formal URN namespace registration; instead, it relies on decentralized URN schemes (e.g., `:uuid:`, `:dev:`).
 
 Profile Name: Autonomous AI Agent EAT Profile
 Profile URI: urn:ietf:eat:profile:ai-agent:1
@@ -311,7 +292,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
 - [[RFC8174](https://www.ietf.org/rfc/rfc8174.html)]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.
 - [[RFC8392](https://datatracker.ietf.org/doc/html/rfc8392)]  Jones, M., et al., "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392, May 2018.
-- [[RFC9711](https://datatracker.ietf.org/doc/html/rfc9711)] L. Lundblade, G. Mandyam,J. O'Donoghue,C. Wallace, "The Entity Attestation Token (EAT)", RFC 9711, April 2025 ISSN:2070-1721.
+- [[RFC9711](https://datatracker.ietf.org/doc/html/rfc9711)] L. Lundblade, G. Mandyam,J. O'Donoghue,C. Wallace, "The Entity Attestation Token (EAT)", RFC 9711, DOI 10.17487/RFC9711, April 2025.
 - <a name="rats"> [[RFC9334](https://datatracker.ietf.org/doc/html/rfc9334)] </a>  Birkett, M., et al., "Remote ATtestation ProcedureS (RATS) Architecture", RFC 9334, DOI 10.17487/RFC9334, January 2023.
 - [[RFC8126](https://datatracker.ietf.org/doc/html/rfc8126)]  Cotton, M., et al., "Guidelines for Writing an IANA Considerations Section in RFCs", RFC 8126, DOI 10.17487/RFC8126, June 2017.
 - [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
@@ -346,7 +327,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 ```
 
 
-## Appendix B. Relationship to Existing Standards & Initaitives
+## Appendix B. Relationship to Existing Standards & Initiatives
 
 This document complements:
 - [IETF RATS](#rats): Provides the architectural context for EAT.
