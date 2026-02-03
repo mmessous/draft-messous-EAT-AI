@@ -1,6 +1,6 @@
 ---
 title: "Entity Attestation Token (EAT) Profile for Autonomous AI Agents"
-
+abbrev: EAT-AI-Agents
 category: Informational
 
 docname: draft-messous-EAT-AI
@@ -9,26 +9,26 @@ number:
 date: 29/10/2025
 consensus: ...
 v: 1
-area: SEC
-workgroup: RATS
+# area: SEC
+# workgroup: WG Working Group
 keyword:
  - AI Agents
  - Entity Attestation Token (EAT) 
  - RATS
  - Trust
 venue:
-group: WG
-type: Working Group
-mail: ....
-arch: ....
-github: https://github.com/mmessous/draft-messous-EAT-AI/tree/main
-latest: ....
+# group: WG
+# type: Working Group
+# mail: ....
+# arch: ....
+    github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
+    latest: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
 
 
 
 authors:
  -
-    fullname: Ayoub MESSOUS, Lionel MORAND
+    fullname: "Ayoub MESSOUS", "Lionel MORAND", "Peter Chunchi Liu"
     organization: Huawei R&D
     email: ayoub.messous@huawei.com
 
@@ -148,10 +148,12 @@ When used, the SBOM SHOULD include:
 This claim complements model integrity (`ai-model-hash`) by attesting to the execution context in which the model operates—critical for reproducibility and security analysis.
 
 
-
+```
+PCL
 (PCL): Would each ai-model-id have a different urn registration? How would this part operate? Should model owner do the submit through some flexible/dynamic methods, or RFC-like methods?URN are long-term preserved registries usually registered through RFCs but I dont know if that is the best way.
 (PCL): Do you need another AI-BOM? Or this itself _is_ an AIBOM? Would be non-AI regular SBOMs be necessary?
 (PCL): I see these claims might be attested by different owners? Or should 1 owner/verifier attest them all?
+```
 
 ### 4.2. Optional Domain-Specific Claims (5G/6G)
 
@@ -182,10 +184,10 @@ Core and optional claims MAY appear in submodules, but not at top level unless a
 
 Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from [RFC 9711]. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
 
-#### 4.3.1. Submodule Claims-Set for Models
+#### 4.4.1. Submodule Claims-Set for Models
 When a model is represented in a submodule, it carries its own instance of `ai-model-id` and `ai-model-hash`. If the model weights are proprietary (e.g., accessed via a cloud API), the submodule SHOULD include an `ai-model-id` that the Verifier can match against a provider Endorsement.
 
-#### 4.3.2. Example: Multi-Model Agent (CWT Diagnostic)
+#### 4.4.2. Example: Multi-Model Agent (CWT Diagnostic)
 The following example demonstrates an agent employing an orchestrator LLM and a specialized vision model. Note the use of the digest format [alg, val] to support different hash types for each model.
 
 Code snippet
@@ -206,9 +208,9 @@ Code snippet
   }
 }
 ```
-#### 4.3.2. Nested Multi-Agent and Multi-Model Attestation
+#### 4.3. Nested Multi-Agent and Multi-Model Attestation
 
-To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the submods claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
+To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the `submods` claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
 
 The following CWT diagnostic example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
 
@@ -243,6 +245,13 @@ Code snippet
   }
 }
 ```
+### 4.5. Support for Composite and Layered Attestation
+This profile supports composite attestation where different system components (e.g., hardware TEE, OS runtime, and AI model) are owned or managed by different entities.
+
+- **Nesting Mechanism:** Components SHOULD be represented as nested EATs within the submods claim (Key 266). Each nested token MAY be signed by a different attestation key belonging to the respective component owner.
+
+- **Verifier Role:** A Verifier receiving a composite EAT SHOULD follow the Hierarchical Pattern, where it acts as a Lead Verifier and delegates the appraisal of individual submodules to specialized verifiers that hold the appropriate Trust Anchors for each owner.
+
 
 ## 5. Security Considerations 
 - All claims MAY be bound to a hardware-rooted attestation (e.g., TEE) via standard EAT platform claims (ueid, oemid, dbgstat).
@@ -346,11 +355,4 @@ This document complements:
 It differs from [I-D.huang-rats-agentic-eat-cap-attest](#idRatsAgentiEAT) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
 
 # Acknowledgments
-The authors thanks the ETSI ENI ISG and IETF RATS WG for their foundational work on AI trust and remote attestation.
-
-
-
-Authors' Address:
-Ayoub MESSOUS, Lionel MORAND
-Huawei
-Email: ayoub.messous@huawei.com
+TODO acknowledge.
