@@ -59,7 +59,7 @@ Traditional SBOMs remain essential to capture the **software supply chain** (e.g
 
 ## 2. Terminology
 
-- **AI Agent**: AI agents are autonomous systems powered by Large Language Models (LLMs) that can reason, plan, use tools, maintain memory, and take actions to accomplish goals. (PCL: Accoring to OWASP: https://cheatsheetseries.owasp.org/cheatsheets/AI_Agent_Security_Cheat_Sheet.html)
+- **AI Agent**: AI agents are autonomous systems powered by Large Language Models (LLMs) that can reason, plan, use tools, maintain memory, and take actions to accomplish goals.
 - **Model Integrity**: The property that AI model weights and architecture have not been altered from a known-good state.
 - **Training Provenance**: Metadata describing the origin, scope, and privacy properties of data used to train an AI model.
 - **Inference Policy**: Constraints defining the authorized input context (e.g., slice type, geography) under which an agent may operate.
@@ -235,6 +235,81 @@ Scenarios where different system components (e.g., hardware TEE, OS runtime, and
 
 For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchical Pattern**, extracting nested sub-tokens and delegating their appraisal to specialized verifiers holding the appropriate Trust Anchors.
 
+```
+      +-----------------------------------------------------------+
+      |  Attesting Device (e.g., Edge Server / 5G UE)             |
+      |                                                           |
+      |  +----------------------------+                           |
+      |  | Hardware Root of Trust     | <--- Signing Key (AK_1)   |
+      |  | (RoT)                      |                           |
+      |  +-------------+--------------+                           |
+      |                | Measures                                 |
+      |                v                                          |
+      |  +-------------+--------------+                           |
+      |  | TEE / Secure OS            | <--- Signing Key (AK_2)   |
+      |  | (Submodule 1)              |      (Optional)           |
+      |  +-------------+--------------+                           |
+      |                | Measures & Isolates                      |
+      |                v                                          |
+      |  +-------------+--------------+                           |
+      |  | AI Agent Environment       |                           |
+      |  |                            |                           |
+      |  |  +----------------------+  |                           |
+      |  |  | AI Model (Target)    |  |                           |
+      |  |  | - Weights Hash       |  |                           |
+      |  |  | - Config             |  |                           |
+      |  |  +----------------------+  |                           |
+      |  +----------------------------+                           |
+      +-----------------------------------------------------------+
+```
+_Figure 1: Example of a Chain of Trust _
+
+Figure 1 illustrates the Chain of Trust. The Hardware Root of Trust (RoT) measures the integrity of the Trusted Execution Environment (TEE) or OS. The TEE, acting as a transitive verifier, subsequently measures the AI Agent's model binaries and policy configurations. The resulting EAT token reflects this hierarchy using nested submodules, ensuring that the `ai-model-hash` is reported by a trusted parent rather than the agent itself.
+
+To clarify the hierarchical trust relationships in multi-owner attestation scenarios, Figure 2 illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per RFC 9711 Section 4.2.18.
+
+```
++-----------------------------------------------------------------+
+|  Top-Level EAT (Platform Attester)                              |
+|  • ueid: Platform hardware identity (e.g., TPM/SE)              |
+|  • nonce: Freshness guarantee                                   |
+|  • submods: {                                                   |
+|      "tee-runtime": {  ← Signed by Platform Owner               |
+|          • ueid: TEE instance ID                                |
+|          • swname: "Confidential-VM-v2"                         |
+|          • submods: {                                           |
+|              "ai-agent": {  ← Signed by AI Operator             |
+|                  • swname: "Execution-Agent-v3"                 |
+|                  • ai-model-id: "urn:uuid:..."                  |
+|                  • ai-model-hash: [alg, hash]                   |
+|                  • submods: {                                   |
+|                      "orchestrator": {...},  ← Model Owner A    |
+|                      "vision-model": {...}   ← Model Owner B    |
+|                  }                                              |
+|              }                                                  |
+|          }                                                      |
+|      }                                                          |
+|  }                                                              |
++-----------------------------------------------------------------+
+```
+_Figure 2: Trust hierarchy for layered attestation using EAT submods_
+
+
+* **Trust Binding Semantics**
+- **Hardware → TEE:** The TEE runtime measurement is included in a platform-signed attestation report (e.g., AMD SEV-SNP, Intel TDX). The top-level EAT's signature binds the `tee-runtime` submodule to this hardware root.
+- **TEE → AI Agent:** The AI agent's code and configuration are measured into the TEE's launch digest. The `ai-agent` submodule is signed by the AI operator's key, which itself is endorsed by the platform owner (via an Endorsement per RFC 9334).
+- **Agent → Models:** Individual models are signed by their respective providers. The agent's runtime verifies model signatures before loading; these signatures are reflected in the nested `submods` entries.
+
+* **Appraisal Delegation**
+Per RFC 9334 Section 5.3, a Lead Verifier appraising the top-level token:
+  1- Validates the platform signature against a hardware Trust Anchor
+  2- Delegates `tee-runtime` appraisal to a TEE-specific verifier holding platform Endorsements
+  3- Delegates `ai-agent` appraisal to an AI policy verifier holding operator Trust Anchors
+  4- Optionally delegates model submodules to specialized model catalog verifiers
+
+A submodule appraisal failure MUST cause rejection of the entire attestation unless policy explicitly permits partial trust (e.g., non-critical auxiliary models). This failure semantics MUST be defined by the deployment policy—not by this profile.
+
+
 ## 5. Security Considerations 
 - Claims SHOULD be bound to a hardware-rooted attestation where available.
 - **`ai-model-hash`** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
@@ -250,16 +325,16 @@ For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchica
 - EAT tokens SHOULD be transmitted over secure channels (e.g., TLS 1.3).
 - owner-id SHOULD use pseudonymous identifiers (e.g., GPSI per 3GPP TS 29.222).
 - Embedded SBOMs or detailed URIs may reveal deployment topology. When privacy is a concern, use opaque digests or pseudonymized SBOM identifiers.
+- High-granularity combinations of `training-geo-region` + `dp-epsilon` + `allowed-apis` may uniquely identify a "private" model even if the `ai-model-id` is obscured.
 
 
 ## 7. IANA Considerations
 ## 7.1. EAT Profile Registration
 - IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
-- IANA is requested to register the URN namespace identifier `ai:model` under the `:ietf` tree, for use in standardized AI model identifiers. This registration does **not** imply that all model identifiers require IANA or IETF approval. The string `ai:model` is used in examples to denote standardized models. This document does not request a formal URN namespace registration; instead, it relies on decentralized URN schemes (e.g., `:uuid:`, `:dev:`).
 
 Profile Name: Autonomous AI Agent EAT Profile
-Profile URI: urn:ietf:eat:profile:ai-agent:1
 Reference: [THIS DOCUMENT]
+
 ### 7.2. CWT Claims Registry
 IANA is requested to register the following in the "CBOR Web Token (CWT) Claims" registry [IANA-CWT]:
 
@@ -314,15 +389,15 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 
 ```
 {
-/ ueid / 10: h'0102030405060708',
-/ sw-name / 256: "execution-agent-v3",
+/ ueid / 256: h'0102030405060708',
+/ swname / 270: "execution-agent-v3",
 / ai-model-id / -75000: "urn:etsi:eni:model:slice-opt-cnn:v3",
 / ai-model-hash / -75001: [-44,h'9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f'],
 / training-geo-region / -75004: ["DE", "FR"],
 / dp-epsilon / -75005: 0.5,
 / input-policy-digest / -75006: [-44,h'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0'],
 / ai-sbom-ref / -75012: "https://sbom.example.net/agents/slice-opt-v3.spdx.json",
-/ nonce / 19: h'abcdef1234567890'
+/ nonce / 10: h'abcdef1234567890'
 }
 ```
 
