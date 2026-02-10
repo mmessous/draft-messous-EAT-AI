@@ -18,12 +18,11 @@ keyword:
  - RATS
  - Trust
 venue:
-# group: WG
-# type: Working Group
-# mail: ....
-# arch: ....
-    github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
-    latest: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
+group: WG
+type: Working Group
+mail: ....
+arch: ....
+github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
 
 authors:
  - ins: A. Messous
@@ -38,16 +37,13 @@ authors:
    fullname: Peter Chunchi Liu
    organization: Huawei
    email:
----
  
-# Entity Attestation Token (EAT) Profile for Autonomous AI Agents
-
-## Abstract
+--- abstract
 
 This document defines a profile for the Entity Attestation Token (EAT) to support remote attestation of autonomous AI agents across domains. It specifies a set of standardized claims for attesting the integrity of AI model parameters, the provenance of training data, and the constraints of inference-time data access policies. Optional extensions for 5G/6G network functions—such as slice-type authorization—are included for interoperability with ETSI ENI and 3GPP architectures. The profile is encoded in CBOR Web Tokens (CWTs) or JSON Web Tokens (JWTs) and is designed to be used within the IETF RATS architecture.
 
 
-
+--- middle
 ## 1. Introduction
 
 Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
