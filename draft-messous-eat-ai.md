@@ -10,9 +10,10 @@ docname: draft-messous-eat-ai-00
 
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 
-v: 1
-
-area: SEC
+number:
+date:
+consensus: true
+v: 0
 
 workgroup: WG Working Group
 
@@ -39,8 +40,6 @@ authors:
    fullname: Peter Chunchi Liu
    organization: Huawei
    email:
-
-date:
  
 --- abstract
 
