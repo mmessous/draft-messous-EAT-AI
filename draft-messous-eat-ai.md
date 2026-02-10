@@ -417,7 +417,7 @@ This document complements:
 - [IETF RATS](https://datatracker.ietf.org/doc/html/rfc9334): Provides the architectural context for EAT.
 - [ETSI GR ENI 051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf): Defines the AI-Core where these claims are applied.
 
-It differs from [I-D.huang-rats-agentic-eat-cap-attest](#idRatsAgentiEAT) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
+It differs from [I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
 
 # Acknowledgments
 TODO acknowledge.
