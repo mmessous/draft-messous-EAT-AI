@@ -381,10 +381,10 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 
 ### 8.2. Informative References
 
-- <a name="etsi">[[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] </a> ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
+- [[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
 - [[3GPP-TR-33.898](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088)] 3GPP, **"Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"**, TR 33.898, V18.0.1  July 2023. 
 - [[3GPP-TR-33.784](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294)] 3GPP, **"Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"**, TR 33.784 V0.0.0, April 2025. 
-- <a name="idRatsAgentiEAT">[[I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/)] </a> Huang, K., et al., **"Capability Attestation Extensions for the Entity Attestation Token (EAT) in Agentic AI Systems"**, Work in Progress, Internet-Draft, March 2025.
+- [[I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/)] Huang, K., et al., **"Capability Attestation Extensions for the Entity Attestation Token (EAT) in Agentic AI Systems"**, Work in Progress, Internet-Draft, March 2025.
 - [[draft-ni-wimse-ai-agent-identity](https://datatracker.ietf.org/doc/draft-ni-wimse-ai-agent-identity/)] Yuan, N., Liu, P., **"WIMSE Applicability for AI Agents"**, Work in Progress.
 - [[draft-liu-oauth-a2a-profile](https://datatracker.ietf.org/doc/draft-liu-oauth-a2a-profile/)] Liu, P., Yuan, N., **"Agent-to-Agent (A2A) Profile for OAuth Transaction Tokens"**, Work in Progress.
 
