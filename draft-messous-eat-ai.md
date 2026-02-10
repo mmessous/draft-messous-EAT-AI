@@ -1,4 +1,5 @@
 ---
+
 ###
 title: "Entity Attestation Token (EAT) Profile for Autonomous AI Agents"
 
