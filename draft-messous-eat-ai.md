@@ -53,7 +53,7 @@ This document defines a profile for the Entity Attestation Token (EAT) to suppor
 
 ## 1. Introduction
 
-Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breacidRatsAgentiEAThes.
+Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
 
 The Entity Attestation Token (EAT) [RFC9711] provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core [ETSI-GR-ENI-051], 3GPP TS 29.510).
 
