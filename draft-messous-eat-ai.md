@@ -1,22 +1,15 @@
 ---
 
-###
 title: "Entity Attestation Token (EAT) Profile for Autonomous AI Agents"
-
 abbrev: EAT-AI-Agents
-
 category: info
-
 docname: draft-messous-eat-ai-00
-
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
-date: 2026-02-10
+date: '2026-02-10'
 consensus: true
 v: 0
-
 workgroup: WG Working Group
-
 keyword:
  - AI Agents
  - Entity Attestation Token (EAT) 
