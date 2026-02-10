@@ -10,6 +10,22 @@ docname: draft-messous-eat-ai-00
 
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 
+
+authors:
+ - ins: A. Messous
+   fullname: Ayoub MESSOUS
+   organization: Huawei R&D
+   email: ayoub.messous@huawei.com
+ - ins: L. Morand
+   fullname: Lionel MORAND
+   organization: Huawei R&D
+   email:
+ - ins: P. C. Liu
+   fullname: Peter Chunchi Liu
+   organization: Huawei
+   email:
+
+   
 number:
 date:
 consensus: true
@@ -27,19 +43,6 @@ group: WG
 type: Working Group
 github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
 
-authors:
- - ins: A. Messous
-   fullname: Ayoub MESSOUS
-   organization: Huawei R&D
-   email: ayoub.messous@huawei.com
- - ins: L. Morand
-   fullname: Lionel MORAND
-   organization: Huawei R&D
-   email:
- - ins: P. C. Liu
-   fullname: Peter Chunchi Liu
-   organization: Huawei
-   email:
  
 --- abstract
 
@@ -301,12 +304,12 @@ To clarify the hierarchical trust relationships in multi-owner attestation scena
 _Figure 2: Trust hierarchy for layered attestation using EAT submods_
 
 
-* **Trust Binding Semantics**
+#### **Trust Binding Semantics**
 - **Hardware → TEE:** The TEE runtime measurement is included in a platform-signed attestation report (e.g., AMD SEV-SNP, Intel TDX). The top-level EAT's signature binds the `tee-runtime` submodule to this hardware root.
 - **TEE → AI Agent:** The AI agent's code and configuration are measured into the TEE's launch digest. The `ai-agent` submodule is signed by the AI operator's key, which itself is endorsed by the platform owner (via an Endorsement per RFC 9334).
 - **Agent → Models:** Individual models are signed by their respective providers. The agent's runtime verifies model signatures before loading; these signatures are reflected in the nested `submods` entries.
 
-* **Appraisal Delegation**
+#### **Appraisal Delegation**
 Per RFC 9334 Section 5.3, a Lead Verifier appraising the top-level token:
   1- Validates the platform signature against a hardware Trust Anchor
   2- Delegates `tee-runtime` appraisal to a TEE-specific verifier holding platform Endorsements
@@ -369,13 +372,13 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 ## 8.1. Normative References
 
 
-- [[RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html)]  Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.
-- [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
-- [[RFC8174](https://www.ietf.org/rfc/rfc8174.html)]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.
-- [[RFC8392](https://datatracker.ietf.org/doc/html/rfc8392)]  Jones, M., et al., "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392, May 2018.
+- [[RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html)] Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.
+- [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)] Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
+- [[RFC8174](https://www.ietf.org/rfc/rfc8174.html)] Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.
+- [[RFC8392](https://datatracker.ietf.org/doc/html/rfc8392)] Jones, M., et al., "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392, May 2018.
 - [[RFC9711](https://datatracker.ietf.org/doc/html/rfc9711)] L. Lundblade, G. Mandyam,J. O'Donoghue,C. Wallace, "The Entity Attestation Token (EAT)", RFC 9711, DOI 10.17487/RFC9711, April 2025.
-- <a name="rats"> [[RFC9334](https://datatracker.ietf.org/doc/html/rfc9334)] </a>  Birkett, M., et al., "Remote ATtestation ProcedureS (RATS) Architecture", RFC 9334, DOI 10.17487/RFC9334, January 2023.
-- [[RFC8126](https://datatracker.ietf.org/doc/html/rfc8126)]  Cotton, M., et al., "Guidelines for Writing an IANA Considerations Section in RFCs", RFC 8126, DOI 10.17487/RFC8126, June 2017.
+- [[RFC9334](https://datatracker.ietf.org/doc/html/rfc9334)] Birkett, M., et al., "Remote ATtestation ProcedureS (RATS) Architecture", RFC 9334, DOI 10.17487/RFC9334, January 2023.
+- [[RFC8126](https://datatracker.ietf.org/doc/html/rfc8126)] Cotton, M., et al., "Guidelines for Writing an IANA Considerations Section in RFCs", RFC 8126, DOI 10.17487/RFC8126, June 2017.
 - [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
 
 
@@ -411,8 +414,8 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 ## Appendix B. Relationship to Existing Standards & Initiatives
 
 This document complements:
-- [IETF RATS](#rats): Provides the architectural context for EAT.
-- [ETSI GR ENI 051](#etsi): Defines the AI-Core where these claims are applied.
+- [IETF RATS](https://datatracker.ietf.org/doc/html/rfc9334): Provides the architectural context for EAT.
+- [ETSI GR ENI 051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf): Defines the AI-Core where these claims are applied.
 
 It differs from [I-D.huang-rats-agentic-eat-cap-attest](#idRatsAgentiEAT) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
 
