@@ -27,13 +27,7 @@ authors:
    email:
 
    
-number:
 
-date:
-
-consensus: true
-
-v: 0
 
 workgroup: WG Working Group
 
@@ -46,7 +40,13 @@ venue:
 group: WG
 type: Working Group
 github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
+number:
 
+date: 2024-02-10
+
+consensus: true
+
+v: 0
  
 --- abstract
 
