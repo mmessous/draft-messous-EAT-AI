@@ -6,9 +6,6 @@ category: info
 
 docname: draft-messous-EAT-AI
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
-number:
-date:
-consensus: ...
 v: 1
 # area: SEC
 # workgroup: WG Working Group
@@ -20,8 +17,6 @@ keyword:
 venue:
 group: WG
 type: Working Group
-mail: ....
-arch: ....
 github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
 
 authors:
