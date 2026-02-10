@@ -37,7 +37,7 @@ authors:
  - ins: P. C. Liu
    fullname: Peter Chunchi Liu
    organization: Huawei
-   email: 
+   email:
 ---
  
 # Entity Attestation Token (EAT) Profile for Autonomous AI Agents
