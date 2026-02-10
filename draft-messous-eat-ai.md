@@ -27,9 +27,18 @@ venue:
 
 
 authors:
- - fullname: "Ayoub MESSOUS", "Lionel MORAND", "Peter Chunchi Liu"
+ -  ins: A. Messous
+    fullname: Ayoub MESSOUS
     organization: Huawei R&D
     email: ayoub.messous@huawei.com
+ -  ins: L. Morand
+    fullname: Lionel MORAND
+    organization: Huawei R&D
+    email:
+ -  ins: P. C. Liu
+    fullname: Peter Chunchi Liu
+    organization: Huawei
+    email: 
  ---
  
 # Entity Attestation Token (EAT) Profile for Autonomous AI Agents
