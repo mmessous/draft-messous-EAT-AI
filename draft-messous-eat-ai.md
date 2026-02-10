@@ -6,7 +6,7 @@ abbrev: EAT-AI-Agents
 
 category: info
 
-docname: draft-messous-EAT-AI-00
+docname: draft-messous-eat-ai-00
 
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 
