@@ -1,12 +1,13 @@
 ---
+###
 title: "Entity Attestation Token (EAT) Profile for Autonomous AI Agents"
 abbrev: EAT-AI-Agents
-category: Informational
+category: info
 
 docname: draft-messous-EAT-AI
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
-date: 29/10/2025
+date:
 consensus: ...
 v: 1
 # area: SEC
@@ -24,21 +25,19 @@ venue:
     github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
     latest: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
 
-
-
 authors:
- -  ins: A. Messous
-    fullname: Ayoub MESSOUS
-    organization: Huawei R&D
-    email: ayoub.messous@huawei.com
- -  ins: L. Morand
-    fullname: Lionel MORAND
-    organization: Huawei R&D
-    email:
- -  ins: P. C. Liu
-    fullname: Peter Chunchi Liu
-    organization: Huawei
-    email: 
+ - ins: A. Messous
+   fullname: Ayoub MESSOUS
+   organization: Huawei R&D
+   email: ayoub.messous@huawei.com
+ - ins: L. Morand
+   fullname: Lionel MORAND
+   organization: Huawei R&D
+   email:
+ - ins: P. C. Liu
+   fullname: Peter Chunchi Liu
+   organization: Huawei
+   email: 
  ---
  
 # Entity Attestation Token (EAT) Profile for Autonomous AI Agents
