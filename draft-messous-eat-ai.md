@@ -39,6 +39,8 @@ authors:
    fullname: Peter Chunchi Liu
    organization: Huawei
    email:
+
+date:
  
 --- abstract
 
@@ -46,6 +48,7 @@ This document defines a profile for the Entity Attestation Token (EAT) to suppor
 
 
 --- middle
+
 ## 1. Introduction
 
 Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
