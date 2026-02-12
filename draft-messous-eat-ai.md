@@ -29,18 +29,6 @@ author:
     fullname: "Chunchi Liu"
     organization: Your Organization Here
     email: "131236634+liuchunchi@users.noreply.github.com"
- - ins: A. Messous
-   fullname: Ayoub MESSOUS
-   organization: Huawei R&D
-   email: ayoub.messous@huawei.com
- - ins: L. Morand
-   fullname: Lionel MORAND
-   organization: Huawei R&D
-   email:
- - ins: P. Liu
-   fullname: Peter Chunchi Liu
-   organization: Huawei
-   email: "131236634+liuchunchi@users.noreply.github.com"
    
 normative:
 
