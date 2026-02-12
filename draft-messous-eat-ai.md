@@ -1,21 +1,20 @@
 ---
-title: Entity Attestation Token (EAT) Profile for Autonomous AI Agents
-abbrev: EAT-AI-Agents
+title: Entity Attestation Token (EAT) Profile for AI Integrity in Network Functions
+abbrev: EAT-AI-4-NET
 category: info
 
-docname: draft-messous-eat-ai-00
+docname: draft-messous-eat-ai-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
-v: 1
-# area: SEC
+v: 3
+# area: AREA
 # workgroup: WG Working Group
 keyword:
- - AI Agents
- - Entity Attestation Token (EAT) 
- - RATS
- - Trust
+ - next generation
+ - unicorn
+ - sparkling distributed ledger
 venue:
 #  group: WG
 #  type: Working Group
@@ -29,7 +28,7 @@ author:
     fullname: "Chunchi Liu"
     organization: Your Organization Here
     email: "131236634+liuchunchi@users.noreply.github.com"
-   
+
 normative:
 
 informative:
@@ -412,10 +411,10 @@ This document complements:
 It differs from [I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
 
 
+
 --- back
 
 # Acknowledgments
-TODO acknowledge.
 {:numbered="false"}
 
 TODO acknowledge.
