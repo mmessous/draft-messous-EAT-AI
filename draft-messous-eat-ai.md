@@ -1,27 +1,34 @@
 ---
-
-title: "Entity Attestation Token (EAT) Profile for Autonomous AI Agents"
+title: Entity Attestation Token (EAT) Profile for Autonomous AI Agents
 abbrev: EAT-AI-Agents
 category: info
+
 docname: draft-messous-eat-ai-00
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
+date:
 consensus: true
-v: 0
-workgroup: WG Working Group
+v: 1
+# area: SEC
+# workgroup: WG Working Group
 keyword:
  - AI Agents
  - Entity Attestation Token (EAT) 
  - RATS
  - Trust
-
 venue:
-group: WG
-type: Working Group
-github: "https://github.com/mmessous/draft-messous-EAT-AI/tree/main"
+#  group: WG
+#  type: Working Group
+#  mail: WG@example.com
+#  arch: https://example.com/WG
+  github: "liuchunchi/draft-messous-EAT-AI"
+  latest: "https://liuchunchi.github.io/draft-messous-EAT-AI/draft-messous-eat-ai.html"
 
-
-authors:
+author:
+ -
+    fullname: "Chunchi Liu"
+    organization: Your Organization Here
+    email: "131236634+liuchunchi@users.noreply.github.com"
  - ins: A. Messous
    fullname: Ayoub MESSOUS
    organization: Huawei R&D
@@ -30,12 +37,17 @@ authors:
    fullname: Lionel MORAND
    organization: Huawei R&D
    email:
- - ins: P. C. Liu
+ - ins: P. Liu
    fullname: Peter Chunchi Liu
    organization: Huawei
-   email:
+   email: "131236634+liuchunchi@users.noreply.github.com"
    
- 
+normative:
+
+informative:
+
+...
+
 --- abstract
 
 This document defines a profile for the Entity Attestation Token (EAT) to support remote attestation of autonomous AI agents across domains. It specifies a set of standardized claims for attesting the integrity of AI model parameters, the provenance of training data, and the constraints of inference-time data access policies. Optional extensions for 5G/6G network functions—such as slice-type authorization—are included for interoperability with ETSI ENI and 3GPP architectures. The profile is encoded in CBOR Web Tokens (CWTs) or JSON Web Tokens (JWTs) and is designed to be used within the IETF RATS architecture.
@@ -411,5 +423,11 @@ This document complements:
 
 It differs from [I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/) by specifying measurable, cryptographically verifiable claims rather than abstract capabilities.
 
+
+--- back
+
 # Acknowledgments
+TODO acknowledge.
+{:numbered="false"}
+
 TODO acknowledge.
