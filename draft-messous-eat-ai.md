@@ -12,9 +12,10 @@ v: 3
 # area: AREA
 # workgroup: WG Working Group
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - AI Agents
+ - Entity Attestation Token (EAT) 
+ - RATS
+ - Trust
 venue:
 #  group: WG
 #  type: Working Group
