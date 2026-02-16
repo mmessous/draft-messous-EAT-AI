@@ -25,7 +25,6 @@ venue:
 
 author:
  -
-    ins: A. MESSOUS  
     fullname: "Ayoub MESSOUS"
     organization: Huawei R&D
     email: "ayoub.messous@huaweil.com"
