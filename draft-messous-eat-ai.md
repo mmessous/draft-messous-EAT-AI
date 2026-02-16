@@ -28,7 +28,7 @@ author:
     fullname: "Ayoub MESSOUS"
     organization: Huawei R&D
     email: "ayoub.messous@huaweil.com"
- -  ins/ L. Morand 
+ -  ins: L. Morand 
     fullname: "Lionel Morand"
     organization: Huawei R&D
     email: "lionel.morand@huaweil.com"
