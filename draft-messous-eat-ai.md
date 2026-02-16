@@ -23,7 +23,7 @@ venue:
 #  arch: https://example.com/WG
   github: "https://github.com/mmessous/draft-messous-EAT-AI"
 
-author:
+authors:
  -
     fullname: "Ayoub MESSOUS"
     organization: Huawei R&D
