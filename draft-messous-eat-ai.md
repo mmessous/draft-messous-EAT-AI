@@ -1,9 +1,9 @@
 ---
-title: Entity Attestation Token (EAT) Profile for AI Integrity in Network Functions
-abbrev: EAT-AI-4-NET
+title: Entity Attestation Token (EAT) Profile for Autonomous AI Agents
+abbrev: EAT-AI-Agents
 category: info
 
-docname: draft-messous-eat-ai-latest
+docname: draft-messous-eat-ai-00
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
@@ -20,14 +20,13 @@ venue:
 #  type: Working Group
 #  mail: WG@example.com
 #  arch: https://example.com/WG
-  github: "liuchunchi/draft-messous-EAT-AI"
-  latest: "https://liuchunchi.github.io/draft-messous-EAT-AI/draft-messous-eat-ai.html"
+  github: "https://github.com/mmessous/draft-messous-EAT-AI"
 
 author:
  -
-    fullname: "Chunchi Liu"
-    organization: Your Organization Here
-    email: "131236634+liuchunchi@users.noreply.github.com"
+    fullname: "Ayoub MESSOUS"
+    organization: Huawei R&D
+    email: "ayoub.messous@huaweil.com"
 
 normative:
 
