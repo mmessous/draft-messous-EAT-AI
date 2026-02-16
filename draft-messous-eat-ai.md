@@ -28,18 +28,14 @@ author:
     fullname: "Ayoub MESSOUS"
     organization: Huawei R&D
     email: "ayoub.messous@huaweil.com"
-
-author:
  -
-    fullname: "Ayoub MESSOUS"
+    fullname: "Lionel Morand"
     organization: Huawei R&D
-    email: "ayoub.messous@huaweil.com"
-
-author:
+    email: "lionel.morand@huaweil.com"
  -
-    fullname: "Ayoub MESSOUS"
+    fullname: "Peter Chunchi Liu"
     organization: Huawei R&D
-    email: "ayoub.messous@huaweil.com"
+    email: "liuchunchi@huawei.com"
     
 normative:
 
