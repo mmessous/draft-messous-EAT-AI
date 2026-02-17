@@ -4,11 +4,11 @@ name: 'Generate new repository'
 on:
   workflow_dispatch: 
     inputs:
-      draft-name: 'draft-messous-EAT-AI'
+      draft-name:
         required: true
         description: 'draft-messous-EAT-AI'
       org-name:
-        description: 'mmessous'
+        description:
       private-repo:
         description: 'Create as a private repo (default false)'
         default: false
