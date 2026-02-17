@@ -1,0 +1,29 @@
+# {REPO_ROOT}/.github/workflows/main.yml
+
+name: 'Generate new repository'
+on:
+  workflow_dispatch:
+    inputs:
+      draft-name:
+        required: true
+        description: 'Name of new draft and repository'
+      org-name:
+        description: 'Name of Github Organization to use'
+      private-repo:
+        description: 'Create as a private repo (default false)'
+        default: false
+
+jobs:
+  generate-new-repository:
+    runs-on: ubuntu-latest
+    name: Create a new IETF draft repository
+    steps:
+      - name: Create new repository action
+        id: generate-repo
+        uses: IRTF-HRPC/create-ietf-draft-repo-action@v0.1.0
+        with:
+          draft-name: ${{ github.event.inputs.draft-name }}
+          create-repo-github-user: ${{ secrets.CREATE_REPO_GITHUB_USER }}
+          create-repo-github-token: ${{ secrets.CREATE_REPO_GITHUB_TOKEN }}
+          org-name: ${{ github.event.inputs.org-name }}
+          private-repo: ${{ github.event.inputs.private-repo }}
