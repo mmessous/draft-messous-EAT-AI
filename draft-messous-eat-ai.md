@@ -43,7 +43,7 @@ This document defines a profile for the Entity Attestation Token (EAT) to suppor
 
 --- middle
 
-## 1. Introduction
+# 1. Introduction
 
 Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
 
@@ -58,7 +58,7 @@ This profile does not define a full AI Bill of Materials (AIBOM). Instead, it pr
 Traditional SBOMs remain essential to capture the **software supply chain** (e.g., Python, CUDA, framework versions) on which the AI agent depends. This profile complements, but does not replace, those artifacts.
 
 
-## 2. Terminology
+# 2. Terminology
 
 - **AI Agent**: AI agents are autonomous systems powered by Large Language Models (LLMs) that can reason, plan, use tools, maintain memory, and take actions to accomplish goals.
 - **Model Integrity**: The property that AI model weights and architecture have not been altered from a known-good state.
@@ -68,12 +68,12 @@ Traditional SBOMs remain essential to capture the **software supply chain** (e.g
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174].
 
-## 3. Use Cases
+# 3. Use Cases
 
-### 3.1. Generic AI Agent Attestation
+## 3.1. Generic AI Agent Attestation
 An enterprise AI agent attests its model hash and data retention policy before accessing a protected API. For a more extensive protection, attestation target could also include behavioral manifests, identity, prompts, tools and capabilities, SBOM/AIBOMs etc in the future.
 
-### 3.2. 5G/6G Network Functions (Optional Context)
+## 3.2. 5G/6G Network Functions (Optional Context)
 In ETSI ENI AI-Core, an Execution Agent generates instructions for network slice configuration. The agent should prove:
 - It runs an approved model (`ai-model-hash`),
 - It was trained on GDPR-compliant data (`training-geo-region`, `dp-epsilon`),
@@ -81,11 +81,11 @@ In ETSI ENI AI-Core, an Execution Agent generates instructions for network slice
 
 > **Note**: Telecom-specific claims are **optional** and **only meaningful in 3GPP/ETSI contexts**.
 
-## 4. EAT-AI Claims Definition
+# 4. EAT-AI Claims Definition
 
 Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims use signed integer keys; in JWT, they use text names (with hyphens converted to underscores per convention).
 
-### 4.1. Core Claims (Generic, Domain-Agnostic)
+## 4.1. Core Claims (Generic, Domain-Agnostic)
 
 | Claim Name | CBOR Key | JWT Name | Type | Description |
 |-----------|----------|--------|------|-------------|
@@ -101,14 +101,14 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
 | `ai-sbom-ref`| -75012 | `ai_sbom_ref` | text / map| Reference to a Software Bill of Materials (SBOM) describing the AI agent’s runtime dependencies (e.g., Python, CUDA, libraries). MAY be a URI, digest, or embedded SBOM fragment|
 
-#### 4.1.1. ai-model-id
+### 4.1.1. ai-model-id
 - `ai-model-id`: A globally unique model identifier encoded as a URN. The URN **namespace** `urn:ietf:ai:model:` is reserved for standardized reference models (e.g., defined in RFCs). **Model owners SHOULD use their own URN namespace** (e.g., based on domain name, PEN, or UUID) to avoid central coordination.
 Examples:
   - `urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6` (for a private model)
   - `urn:ietf:ai:model:llama3-8b` (for a well-known public model, if later standardized)
   - `urn:dev:example.com:finance-agent-v2` (enterprise-owned model)
 
-#### 4.1.2. use of cryptography digests
+### 4.1.2. use of cryptography digests
 - The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
 A digest structure is encoded as a two-element array:
 
@@ -124,7 +124,7 @@ In **JWT** (JSON), it is represented as a JSON object: `{ "alg": "...", "hash": 
 This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
 
 
-#### 4.1.3. ai-sbom-ref
+### 4.1.3. ai-sbom-ref
 - The `ai-sbom-ref` claim provides a reference to the **Software Bill of Materials (SBOM)** associated with the AI agent. This enables verifiers to assess the integrity, license compliance, and vulnerability status of the agent’s software supply chain.
 The value MAY be:
 - A URI pointing to an SBOM document (e.g., in SPDX or CycloneDX format),
@@ -148,7 +148,7 @@ When used, the SBOM SHOULD include:
 - Model serialization format (e.g., ONNX v9, SafeTensors v0.4).
 This claim complements model integrity (`ai-model-hash`) by attesting to the execution context in which the model operates—critical for reproducibility and security analysis.
 
-### 4.2. Optional Domain-Specific Claims (5G/6G)
+## 4.2. Optional Domain-Specific Claims (5G/6G)
 
 | Claim Name | CBOR Key | JWT Name | Type | Description |
 |-----------|----------|--------|------|-------------|
@@ -157,11 +157,11 @@ This claim complements model integrity (`ai-model-hash`) by attesting to the exe
 
 > **Usage**: These claims **SHOULD be used** when attesting agents in **ETSI ENI or 3GPP SBA** environments.
 
-### 4.3. Composite and Multi-Component Attestation
+## 4.3. Composite and Multi-Component Attestation
 
 This profile utilizes the recursive nesting capability of the submods claim (Key 266) to support three specific composite scenarios:
 
-#### 4.3.1. Multi-Agent Platforms:
+### 4.3.1. Multi-Agent Platforms:
 
 To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the `submods` claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
 
@@ -199,7 +199,7 @@ Code snippet
 }
 ```
 
-#### 4.3.2. Multi-Model Agents:
+### 4.3.2. Multi-Model Agents:
 A single agent utilizing an orchestrator model and task-specific worker models.
 
 Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from [RFC 9711]. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
@@ -227,7 +227,7 @@ Code snippet
 }
 ```
 
-#### 4.3.3. Layered Trust:
+### 4.3.3. Layered Trust:
 Scenarios where different system components (e.g., hardware TEE, OS runtime, and AI model) are owned or managed by different entities.
 
  - **Nesting Mechanism:** Components SHOULD be represented as nested EATs within the submods claim (Key 266). Each nested token MAY be signed by a different attestation key belonging to the respective component owner.
@@ -296,12 +296,12 @@ To clarify the hierarchical trust relationships in multi-owner attestation scena
 _Figure 2: Trust hierarchy for layered attestation using EAT submods_
 
 
-#### **Trust Binding Semantics**
+### **Trust Binding Semantics**
 - **Hardware → TEE:** The TEE runtime measurement is included in a platform-signed attestation report (e.g., AMD SEV-SNP, Intel TDX). The top-level EAT's signature binds the `tee-runtime` submodule to this hardware root.
 - **TEE → AI Agent:** The AI agent's code and configuration are measured into the TEE's launch digest. The `ai-agent` submodule is signed by the AI operator's key, which itself is endorsed by the platform owner (via an Endorsement per RFC 9334).
 - **Agent → Models:** Individual models are signed by their respective providers. The agent's runtime verifies model signatures before loading; these signatures are reflected in the nested `submods` entries.
 
-#### **Appraisal Delegation**
+### **Appraisal Delegation**
 Per RFC 9334 Section 5.3, a Lead Verifier appraising the top-level token:
   1- Validates the platform signature against a hardware Trust Anchor
   2- Delegates `tee-runtime` appraisal to a TEE-specific verifier holding platform Endorsements
@@ -311,7 +311,7 @@ Per RFC 9334 Section 5.3, a Lead Verifier appraising the top-level token:
 A submodule appraisal failure MUST cause rejection of the entire attestation unless policy explicitly permits partial trust (e.g., non-critical auxiliary models). This failure semantics MUST be defined by the deployment policy—not by this profile.
 
 
-## 5. Security Considerations 
+# 5. Security Considerations 
 - Claims SHOULD be bound to a hardware-rooted attestation where available.
 - **`ai-model-hash`** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
 - **Verifiers** SHOULD validate claims against authoritative registries (e.g., model hash in secure model catalog).
@@ -321,7 +321,7 @@ A submodule appraisal failure MUST cause rejection of the entire attestation unl
 - Verifiers are expected to combine EAT-AI evidence with external SBOM/AIBOM analysis for comprehensive risk assessment.
 
 
-## 6. Privacy Considerations
+# 6. Privacy Considerations
 - training-geo-region reveals data origin and SHOULD be minimized.
 - EAT tokens SHOULD be transmitted over secure channels (e.g., TLS 1.3).
 - owner-id SHOULD use pseudonymous identifiers (e.g., GPSI per 3GPP TS 29.222).
@@ -329,14 +329,14 @@ A submodule appraisal failure MUST cause rejection of the entire attestation unl
 - High-granularity combinations of `training-geo-region` + `dp-epsilon` + `allowed-apis` may uniquely identify a "private" model even if the `ai-model-id` is obscured.
 
 
-## 7. IANA Considerations
+# 7. IANA Considerations
 ## 7.1. EAT Profile Registration
 - IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
 
 Profile Name: Autonomous AI Agent EAT Profile
 Reference: [THIS DOCUMENT]
 
-### 7.2. CWT Claims Registry
+## 7.2. CWT Claims Registry
 IANA is requested to register the following in the "CBOR Web Token (CWT) Claims" registry [IANA-CWT]:
 
 |Value| Claim Name|Description|
@@ -357,10 +357,10 @@ IANA is requested to register the following in the "CBOR Web Token (CWT) Claims"
 
 The range -75000 to -75012 is reserved for this profile.
 
-### 7.3. JWT Claims Registry
+## 7.3. JWT Claims Registry
 IANA is requested to register the corresponding JWT claim names in the "JSON Web Token Claims" registry [IANA-JWT].
 
-## 8. References
+# 8. References
 ## 8.1. Normative References
 
 
@@ -374,7 +374,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
 
 
-### 8.2. Informative References
+## 8.2. Informative References
 
 - [[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
 - [[3GPP-TR-33.898](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088)] 3GPP, **"Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"**, TR 33.898, V18.0.1  July 2023. 
@@ -384,7 +384,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - [[draft-liu-oauth-a2a-profile](https://datatracker.ietf.org/doc/draft-liu-oauth-a2a-profile/)] Liu, P., Yuan, N., **"Agent-to-Agent (A2A) Profile for OAuth Transaction Tokens"**, Work in Progress.
 
 
-## Appendix A. Example EAT-AI Token (CWT)
+# Appendix A. Example EAT-AI Token (CWT)
 
    The following is a CBOR diagnostic notation of an EAT-AI token:
 
@@ -403,7 +403,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 ```
 
 
-## Appendix B. Relationship to Existing Standards & Initiatives
+# Appendix B. Relationship to Existing Standards & Initiatives
 
 This document complements:
 - [IETF RATS](https://datatracker.ietf.org/doc/html/rfc9334): Provides the architectural context for EAT.
@@ -416,18 +416,4 @@ It differs from [I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf
 --- back
 
 # Acknowledgments
-Authors:
--
-    fullname: "Ayoub MESSOUS"
-    organization: Huawei R&D
-    email: "ayoub.messous@huaweil.com"
--
-    ins: L. Morand 
-    fullname: "Lionel Morand"
-    organization: Huawei R&D
-    email: "lionel.morand@huaweil.com"
--
-    ins: P. Liu
-    fullname: "Peter Chunchi Liu"
-    organization: Huawei R&D
-    email: "liuchunchi@huawei.com"
+TODO
