@@ -2,9 +2,9 @@
 
 name: 'Generate new repository'
 on:
-  workflow_dispatch:
+  workflow_dispatch: 
     inputs:
-      draft-name:
+      draft-name: 'draft-messous-EAT-AI'
         required: true
         description: 'draft-messous-EAT-AI'
       org-name:
