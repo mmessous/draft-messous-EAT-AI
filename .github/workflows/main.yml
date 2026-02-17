@@ -6,9 +6,9 @@ on:
     inputs:
       draft-name:
         required: true
-        description: 'Name of new draft and repository'
+        description: 'draft-messous-EAT-AI'
       org-name:
-        description: 'Name of Github Organization to use'
+        description: 'mmessous'
       private-repo:
         description: 'Create as a private repo (default false)'
         default: false
