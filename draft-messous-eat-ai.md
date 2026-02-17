@@ -13,7 +13,7 @@ v: 3
 # workgroup: WG Working Group
 keyword:
  - AI Agents
- - Entity Attestation Token (EAT) 
+ - Entity Attestation Token (EAT)
  - RATS
  - Trust
 venue:
@@ -27,9 +27,8 @@ author:
 -
     fullname: "Ayoub MESSOUS"
     organization: Huawei R&D
-    email: "ayoub.messous@huaweil.com"
+    email: "ayoub.messous@huaweil.com" 
 
-    
 normative:
 
 informative:
@@ -165,15 +164,15 @@ This profile utilizes the recursive nesting capability of the submods claim (Key
 
 To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the `submods` claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
 
-The following CWT example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one. 
+The following CWT example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
 
 Code snippet
 ```
 {
-  / ueid / 256: h'0102030405060708',  / User/Platform ID /
-  / nonce / 10: h'abcdef1234567890', / Freshness Nonce /
-  / submods / 266: {                 / Submodules Section /
-    
+/ ueid / 256: h'0102030405060708',  / User/Platform ID /
+    / nonce / 10: h'abcdef1234567890', / Freshness Nonce /
+    / submods / 266: {                 / Submodules Section /
+
     / --- Agent 1: Multi-Model Orchestrator --- /
     "agent-1": {
       / swname / 270: "Orchestrator-Agent-v2",
@@ -311,7 +310,7 @@ Per RFC 9334 Section 5.3, a Lead Verifier appraising the top-level token:
 A submodule appraisal failure MUST cause rejection of the entire attestation unless policy explicitly permits partial trust (e.g., non-critical auxiliary models). This failure semantics MUST be defined by the deployment policy—not by this profile.
 
 
-# Security Considerations 
+# Security Considerations
 - Claims SHOULD be bound to a hardware-rooted attestation where available.
 - **`ai-model-hash`** SHOULD be computed on the serialized model file (e.g., ONNX, PyTorch), not in-memory tensors.
 - **Verifiers** SHOULD validate claims against authoritative registries (e.g., model hash in secure model catalog).
