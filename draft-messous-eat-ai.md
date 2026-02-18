@@ -236,31 +236,31 @@ Scenarios where different system components (e.g., hardware TEE, OS runtime, and
 For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchical Pattern**, extracting nested sub-tokens and delegating their appraisal to specialized verifiers holding the appropriate Trust Anchors.
 
 ```
-      +-----------------------------------------------------------+
-      |  Attesting Device (e.g., Edge Server / 5G UE)             |
-      |                                                           |
-      |  +----------------------------+                           |
-      |  | Hardware Root of Trust     | <--- Signing Key (AK_1)   |
-      |  | (RoT)                      |                           |
-      |  +-------------+--------------+                           |
-      |                | Measures                                 |
-      |                v                                          |
-      |  +-------------+--------------+                           |
-      |  | TEE / Secure OS            | <--- Signing Key (AK_2)   |
-      |  | (Submodule 1)              |      (Optional)           |
-      |  +-------------+--------------+                           |
-      |                | Measures & Isolates                      |
-      |                v                                          |
-      |  +-------------+--------------+                           |
-      |  | AI Agent Environment       |                           |
-      |  |                            |                           |
-      |  |  +----------------------+  |                           |
-      |  |  | AI Model (Target)    |  |                           |
-      |  |  | - Weights Hash       |  |                           |
-      |  |  | - Config             |  |                           |
-      |  |  +----------------------+  |                           |
-      |  +----------------------------+                           |
-      +-----------------------------------------------------------+
++-----------------------------------------------------------+
+|  Attesting Device (e.g., Edge Server / 5G UE)             |
+|                                                           |
+|  +----------------------------+                           |
+|  | Hardware Root of Trust     | <--- Signing Key (AK_1)   |
+|  | (RoT)                      |                           |
+|  +-------------+--------------+                           |
+|                | Measures                                 |
+|                v                                          |
+|  +-------------+--------------+                           |
+|  | TEE / Secure OS            | <--- Signing Key (AK_2)   |
+|  | (Submodule 1)              |      (Optional)           |
+|  +-------------+--------------+                           |
+|                | Measures & Isolates                      |
+|                v                                          |
+|  +-------------+--------------+                           |
+|  | AI Agent Environment       |                           |
+|  |                            |                           |
+|  |  +----------------------+  |                           |
+|  |  | AI Model (Target)    |  |                           |
+|  |  | - Weights Hash       |  |                           |
+|  |  | - Config             |  |                           |
+|  |  +----------------------+  |                           |
+|  +----------------------------+                           |
++-----------------------------------------------------------+
 ```
 _Figure 1: Example of a Chain of Trust _
 
