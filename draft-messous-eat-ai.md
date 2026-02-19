@@ -37,7 +37,6 @@ normative:
   RFC9711:
   RFC9334:
   RFC8126:
-  I-D.draft-ietf-rats-eat-measured-component: EAT-M-C
 
 informative:
   ETSI-GR-ENI-051:
