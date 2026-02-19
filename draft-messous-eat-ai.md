@@ -112,7 +112,8 @@ Examples:
 - The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
 A digest structure is encoded as a two-element array:
 
-~~~cbor
+~~~
+cbor
 [ alg, hash ]
 ~~~
 
@@ -174,6 +175,7 @@ To support a user managing multiple agents with varying configurations, we shoul
 The following CWT example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
 
 Code snippet
+
 ~~~
 {
 / ueid / 256: h'0102030405060708',  / User/Platform ID /
@@ -215,6 +217,7 @@ When a model is represented in a submodule, it carries its own instance of `ai-m
 The following example demonstrates an agent employing an orchestrator LLM and a specialized vision model. Note the use of the digest format [alg, val] to support different hash types for each model.
 
 Code snippet
+
 ~~~
 {
   / ueid / 256: h'0102030405060708',
