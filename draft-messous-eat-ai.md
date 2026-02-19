@@ -370,7 +370,8 @@ The range -75000 to -75012 is reserved for this profile.
 IANA is requested to register the corresponding JWT claim names in the "JSON Web Token Claims" registry [IANA-JWT].
 
 # References
-## Normative
+
+## Normative:
 
 - [[RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html)] Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.
 - [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)] Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
