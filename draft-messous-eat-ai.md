@@ -369,7 +369,7 @@ The range -75000 to -75012 is reserved for this profile.
 ## JWT Claims Registry
 IANA is requested to register the corresponding JWT claim names in the "JSON Web Token Claims" registry [IANA-JWT].
 
-# References
+# References:
 ## Normative:
 
 RFC2119:
