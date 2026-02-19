@@ -99,6 +99,7 @@ Claims are defined for both **CWT (CBOR)** and **JWT (JSON)**. In CWT, claims us
 | `capabilities` | -75010 | `capabilities` | array of text | High-level functions (e.g., `"slice-optimization"`) |
 | `allowed-apis` | -75011 | `allowed_apis` | array of URI | Specific endpoints the agent may call |
 | `ai-sbom-ref`| -75012 | `ai_sbom_ref` | text / map| Reference to a Software Bill of Materials (SBOM) describing the AI agent’s runtime dependencies (e.g., Python, CUDA, libraries). MAY be a URI, digest, or embedded SBOM fragment|
+{: #tab-1 title="Core Domain-Agnostic Claims"}
 
 ### ai-model-id
 - `ai-model-id`: A globally unique model identifier encoded as a URN. The URN **namespace** `urn:ietf:ai:model:` is reserved for standardized reference models (e.g., defined in RFCs). **Model owners SHOULD use their own URN namespace** (e.g., based on domain name, PEN, or UUID) to avoid central coordination.
@@ -114,6 +115,7 @@ A digest structure is encoded as a two-element array:
 ~~~~cbor
 [ alg, hash ]
 ~~~~
+
 where:
 - **alg** is the Hash Algorithm Identifier, using either the **integer** or **text string** from the [IANA COSE Algorithms registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms), indicating the hash function used (e.g., '-16' for SHA-256, `-44` for SHA-384, `-45` for SHA3-256).
 - **hash** is the byte string output of applying that hash function to the canonical serialization of the artifact.
@@ -157,6 +159,7 @@ This claim complements model integrity (`ai-model-hash`) by attesting to the exe
 |-----------|----------|--------|------|-------------|
 | `training-geo-region` | -75004 | `training_geo_region` | array of text | ISO 3166-1 alpha-2 codes (e.g., `["DE", "FR"]`) |
 | `allowed-slice-types` | -75007 | `allowed_slice_types` | array of text | 3GPP-defined slice types (e.g., `"eMBB"`, `"URLLC"`) |
+{: #tab-2 title="Optional Domain-Specific Claims"}
 
 > **Usage**: These claims **SHOULD be used** when attesting agents in **ETSI ENI or 3GPP SBA** environments.
 
@@ -358,6 +361,7 @@ IANA is requested to register the following in the "CBOR Web Token (CWT) Claims"
 |-75010 |`capabilities` |Agent capabilities|
 |-75011 |`allowed-apis` |Allowed API endpoints|
 |-75012 | `ai-sbom-ref` | Reference to AI agent’s Software Bill of Materials (SBOM)|
+{: #tab-3 title="CWT Claims Registry"}
 
 The range -75000 to -75012 is reserved for this profile.
 
