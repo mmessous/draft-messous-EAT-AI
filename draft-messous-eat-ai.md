@@ -372,7 +372,6 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 # References
 
 ## Normative:
-
 - [[RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html)] Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.
 - [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)] Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
 - [[RFC8174](https://www.ietf.org/rfc/rfc8174.html)] Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.
@@ -383,7 +382,6 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
 
 ## Informative:
-
 - [[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
 - [[3GPP-TR-33.898](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088)] 3GPP, **"Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"**, TR 33.898, V18.0.1  July 2023. 
 - [[3GPP-TR-33.784](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294)] 3GPP, **"Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"**, TR 33.784 V0.0.0, April 2025. 
