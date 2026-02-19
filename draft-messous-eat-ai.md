@@ -46,7 +46,7 @@ This document defines a profile for the Entity Attestation Token (EAT) to suppor
 
 Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
 
-The Entity Attestation Token (EAT) {{RFC9711}} provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core {{ETSI-GR-ENI-051}}).
+The Entity Attestation Token (EAT) [RFC9711] provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core [ETSI-GR-ENI-051]).
 
 This profile enables verifiers—such as OAuth resource servers, network function orchestrators, or policy enforcement points—to make trust decisions based on verifiable evidence about an agent’s:
 - **Model integrity** (weights, architecture),
@@ -65,7 +65,7 @@ Traditional SBOMs remain essential to capture the **software supply chain** (e.g
 - **Inference Policy**: Constraints defining the authorized input context (e.g., slice type, geography) under which an agent may operate.
 - **EAT-AI**: The EAT profile defined in this document.
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174].
 
 # Use Cases
 
@@ -122,7 +122,7 @@ where:
 
 In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
 In **JWT** (JSON), it is represented as a JSON object: `{ "alg": "...", "hash": "base64url-encoded-hash" }`.
-This design aligns with the Detached-Submodule-Digest type defined in {{RFC 9711, Section 4.2.18.2}} and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
+This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
 
 
 ### ai-sbom-ref
@@ -168,7 +168,7 @@ This profile utilizes the recursive nesting capability of the submods claim (Key
 
 ### Multi-Agent Platforms:
 
-To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the `submods` claim (CBOR key 266) as defined in {{RFC 9711}}. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
+To support a user managing multiple agents with varying configurations, we should leverage the recursive nesting capability of the `submods` claim (CBOR key 266) as defined in [RFC 9711]. In this architectural pattern, the top-level EAT represents the user's platform or trust domain. Each agent is a submodule of that platform, and if an agent uses multiple models, those models are further nested as submodules of that specific agent.
 
 The following CWT example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
 
@@ -208,7 +208,7 @@ Code snippet
 ### Multi-Model Agents:
 A single agent utilizing an orchestrator model and task-specific worker models.
 
-Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from {{RFC 9711}}. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
+Modern AI agents are not necessarly monolithic; sophesticated Agents can consist of an orchestrator model (e.g., a LLM) and several task-specific worker models (e.g., image classifiers or encoders). To support these configurations, this profile utilizes the `submods` claim (Key 266) from [RFC 9711]. Each distinct model used by the agent SHOULD be represented as an entry within the submods map. This allows for granular policy appraisal where different models may have different trust levels, privacy parameters (dp_epsilon), or residency requirements.
 
 When a model is represented in a submodule, it carries its own instance of `ai-model-id` and `ai-model-hash`. If the model weights are proprietary (e.g., accessed via a cloud API), the submodule SHOULD include an `ai-model-id` that the Verifier can match against a provider Endorsement.
 
@@ -274,7 +274,7 @@ For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchica
 
 {{fig-chainoftrust}} illustrates the Chain of Trust. The Hardware Root of Trust (RoT) measures the integrity of the Trusted Execution Environment (TEE) or OS. The TEE, acting as a transitive verifier, subsequently measures the AI Agent's model binaries and policy configurations. The resulting EAT token reflects this hierarchy using nested submodules, ensuring that the `ai-model-hash` is reported by a trusted parent rather than the agent itself.
 
-To clarify the hierarchical trust relationships in multi-owner attestation scenarios, {{fig-trustHierarchy}} illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per {{RFC 9711, Section 4.2.18}}.
+To clarify the hierarchical trust relationships in multi-owner attestation scenarios, {{fig-trustHierarchy}} illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per [RFC 9711, Section 4.2.18].
 
 ~~~~
 +-----------------------------------------------------------------+
@@ -306,11 +306,11 @@ To clarify the hierarchical trust relationships in multi-owner attestation scena
 
 #### **Trust Binding Semantics**
 - **Hardware → TEE:** The TEE runtime measurement is included in a platform-signed attestation report (e.g., AMD SEV-SNP, Intel TDX). The top-level EAT's signature binds the `tee-runtime` submodule to this hardware root.
-- **TEE → AI Agent:** The AI agent's code and configuration are measured into the TEE's launch digest. The `ai-agent` submodule is signed by the AI operator's key, which itself is endorsed by the platform owner (via an Endorsement per {{RFC 9334}}).
+- **TEE → AI Agent:** The AI agent's code and configuration are measured into the TEE's launch digest. The `ai-agent` submodule is signed by the AI operator's key, which itself is endorsed by the platform owner (via an Endorsement per [RFC 9334]).
 - **Agent → Models:** Individual models are signed by their respective providers. The agent's runtime verifies model signatures before loading; these signatures are reflected in the nested `submods` entries.
 
 #### **Appraisal Delegation**
-Per {{RFC 9334, Section 5.3}}, a Lead Verifier appraising the top-level token:
+Per [RFC 9334, Section 5.3], a Lead Verifier appraising the top-level token:
   1- Validates the platform signature against a hardware Trust Anchor
   2- Delegates `tee-runtime` appraisal to a TEE-specific verifier holding platform Endorsements
   3- Delegates `ai-agent` appraisal to an AI policy verifier holding operator Trust Anchors
