@@ -369,41 +369,41 @@ The range -75000 to -75012 is reserved for this profile.
 ## JWT Claims Registry
 IANA is requested to register the corresponding JWT claim names in the "JSON Web Token Claims" registry [IANA-JWT].
 
-# References:
-## Normative:
-
-RFC2119:
-RFC7519:
-RFC8174:
-RFC8392:
-RFC9711:
-RFC9334:
-RFC8126:
-I-D.draft-ietf-rats-eat-measured-component:EAT-M-C
+# References
+## Normative
+normative:
+ RFC2119:
+ RFC7519:
+ RFC8174:
+ RFC8392:
+ RFC9711:
+ RFC9334:
+ RFC8126:
+ I-D.draft-ietf-rats-eat-measured-component:EAT-M-C
 
 ## Informative:
-
-ETSI-GR-ENI-051:
-   title: "Architectural Framework for ENI in 6G"
-   date: February 2025
-   author:
-       org: ETSI
-   target: https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf
-3GPP-TR-33.898:
-   title: "Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"
-   date: July 2023
-   author:
-       org: 3GPP
-   target:  https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088
-3GPP-TR-33.784:
-   title: "Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"
-   date: April 2025
-   author:
-       org: 3GPP
-   target: https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294
-I-D.huang-rats-agentic-eat-cap-attest: Agentic-EAT-CAP
-I-D.draft-ni-wimse-ai-agent-identity: WIMSE-AAI
-I-D.draft-liu-oauth-a2a-profile: OAUTH-Profile
+informative:
+ ETSI-GR-ENI-051:
+  title: "Architectural Framework for ENI in 6G"
+  date: February 2025
+  author:
+   org: ETSI
+  target: https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf
+ 3GPP-TR-33.898:
+  title: "Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"
+  date: July 2023
+  author:
+   org: 3GPP
+  target:  https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088
+ 3GPP-TR-33.784:
+  title: "Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"
+  date: April 2025
+  author:
+   org: 3GPP
+  target: https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294
+ I-D.huang-rats-agentic-eat-cap-attest: Agentic-EAT-CAP
+ I-D.draft-ni-wimse-ai-agent-identity: WIMSE-AAI
+ I-D.draft-liu-oauth-a2a-profile: OAUTH-Profile
 
 # Appendix A. Example EAT-AI Token (CWT)
 
