@@ -122,7 +122,7 @@ where:
 
 In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
 In **JWT** (JSON), it is represented as a JSON object: `{ "alg": "...", "hash": "base64url-encoded-hash" }`.
-This design aligns with the Detached-Submodule-Digest type defined in [RFC 9711, Section 4.2.18.2] and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
+This design aligns with the Detached-Submodule-Digest type defined in {{RFC 9711, Section 4.2.18.2}} and enables future-proof support for multiple hash algorithms (e.g., SHA-2, SHA-3, post-quantum secure hashes) without requiring new claims or breaking existing parsers.
 
 
 ### ai-sbom-ref
@@ -274,7 +274,7 @@ For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchica
 
 {{fig-chainoftrust}} illustrates the Chain of Trust. The Hardware Root of Trust (RoT) measures the integrity of the Trusted Execution Environment (TEE) or OS. The TEE, acting as a transitive verifier, subsequently measures the AI Agent's model binaries and policy configurations. The resulting EAT token reflects this hierarchy using nested submodules, ensuring that the `ai-model-hash` is reported by a trusted parent rather than the agent itself.
 
-To clarify the hierarchical trust relationships in multi-owner attestation scenarios, {{fig-trustHierarchy}} illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per RFC 9711 Section 4.2.18.
+To clarify the hierarchical trust relationships in multi-owner attestation scenarios, {{fig-trustHierarchy}} illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per {{RFC 9711, Section 4.2.18}}.
 
 ~~~~
 +-----------------------------------------------------------------+
@@ -310,7 +310,7 @@ To clarify the hierarchical trust relationships in multi-owner attestation scena
 - **Agent → Models:** Individual models are signed by their respective providers. The agent's runtime verifies model signatures before loading; these signatures are reflected in the nested `submods` entries.
 
 #### **Appraisal Delegation**
-Per {{RFC 9334 Section 5.3}}, a Lead Verifier appraising the top-level token:
+Per {{RFC 9334, Section 5.3}}, a Lead Verifier appraising the top-level token:
   1- Validates the platform signature against a hardware Trust Anchor
   2- Delegates `tee-runtime` appraisal to a TEE-specific verifier holding platform Endorsements
   3- Delegates `ai-agent` appraisal to an AI policy verifier holding operator Trust Anchors
@@ -370,8 +370,16 @@ The range -75000 to -75012 is reserved for this profile.
 IANA is requested to register the corresponding JWT claim names in the "JSON Web Token Claims" registry [IANA-JWT].
 
 # References
-## Normative References
+## Normative:
 
+RFC2119:
+RFC7519:
+RFC8174:
+RFC8392:
+RFC9711:
+RFC9334:
+RFC8126:
+I-D.draft-ietf-rats-eat-measured-component:EAT-M-C
 
 - [[RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html)] Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.
 - [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)] Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
@@ -383,7 +391,15 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 - [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
 
 
-## Informative References
+## Informative:
+
+ETSI-GR-ENI-051:
+3GPP-TR-33.898:
+3GPP-TR-33.784:
+
+I-D.huang-rats-agentic-eat-cap-attest: Agentic-EAT-CAP
+I-D.draft-ni-wimse-ai-agent-identity: WIMSE-AAI
+I-D.draft-liu-oauth-a2a-profile: OAUTH-Profile
 
 - [[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
 - [[3GPP-TR-33.898](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088)] 3GPP, **"Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"**, TR 33.898, V18.0.1  July 2023. 
