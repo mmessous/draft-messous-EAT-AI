@@ -115,8 +115,8 @@ A digest structure is encoded as a two-element array:
 [ alg, hash ]
 ```
 where:
- * **alg** is the Hash Algorithm Identifier, using either the **integer** or **text string** from the [IANA COSE Algorithms registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms), indicating the hash function used (e.g., '-16' for SHA-256, `-44` for SHA-384, `-45` for SHA3-256).
- * **hash** is the byte string output of applying that hash function to the canonical serialization of the artifact.
+- **alg** is the Hash Algorithm Identifier, using either the **integer** or **text string** from the [IANA COSE Algorithms registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms), indicating the hash function used (e.g., '-16' for SHA-256, `-44` for SHA-384, `-45` for SHA3-256).
+- **hash** is the byte string output of applying that hash function to the canonical serialization of the artifact.
 
 In **CBOR**, the digest is represented as a CBOR array: [ int / tstr, bstr ].
 In **JWT** (JSON), it is represented as a JSON object: `{ "alg": "...", "hash": "base64url-encoded-hash" }`.
@@ -131,15 +131,19 @@ The value MAY be:
 - Or a compact embedded representation (e.g., a minimal map of critical components).
 
 Example (CBOR):
+
 ```
 cbor
 / ai-sbom-ref / -75012: "https://example.com/sboms/agent-xyz.spdx.json"
 ```
+
 Example (embedded digest):
+
 ```
 cbor
 / ai-sbom-ref / -75012: [ -44, h'abcd1234...' ]  ; SHA-384 digest of SBOM
 ```
+
 When used, the SBOM SHOULD include:
 - Runtime environment (e.g., Python 3.11, CUDA 12.4),
 - AI framework versions (e.g., PyTorch 2.3, TensorFlow 2.15),
@@ -235,40 +239,40 @@ Scenarios where different system components (e.g., hardware TEE, OS runtime, and
 
 For multi-owner attestation, a **Lead Verifier** SHOULD follow the **Hierarchical Pattern**, extracting nested sub-tokens and delegating their appraisal to specialized verifiers holding the appropriate Trust Anchors.
 
-```
-+-----------------------------------------------------------+
-|  Attesting Device (e.g., Edge Server / 5G UE)             |
-|                                                           |
-|  +----------------------------+                           |
-|  | Hardware Root of Trust     | <--- Signing Key (AK_1)   |
-|  | (RoT)                      |                           |
-|  +-------------+--------------+                           |
-|                | Measures                                 |
-|                v                                          |
-|  +-------------+--------------+                           |
-|  | TEE / Secure OS            | <--- Signing Key (AK_2)   |
-|  | (Submodule 1)              |      (Optional)           |
-|  +-------------+--------------+                           |
-|                | Measures & Isolates                      |
-|                v                                          |
-|  +-------------+--------------+                           |
-|  | AI Agent Environment       |                           |
-|  |                            |                           |
-|  |  +----------------------+  |                           |
-|  |  | AI Model (Target)    |  |                           |
-|  |  | - Weights Hash       |  |                           |
-|  |  | - Config             |  |                           |
-|  |  +----------------------+  |                           |
-|  +----------------------------+                           |
-+-----------------------------------------------------------+
-```
-_Figure 1: Example of a Chain of Trust _
+~~~~
+      +-----------------------------------------------------------+
+      |  Attesting Device (e.g., Edge Server / 5G UE)             |
+      |                                                           |
+      |  +----------------------------+                           |
+      |  | Hardware Root of Trust     | <--- Signing Key (AK_1)   |
+      |  | (RoT)                      |                           |
+      |  +-------------+--------------+                           |
+      |                | Measures                                 |
+      |                v                                          |
+      |  +-------------+--------------+                           |
+      |  | TEE / Secure OS            | <--- Signing Key (AK_2)   |
+      |  | (Submodule 1)              |      (Optional)           |
+      |  +-------------+--------------+                           |
+      |                | Measures & Isolates                      |
+      |                v                                          |
+      |  +-------------+--------------+                           |
+      |  | AI Agent Environment       |                           |
+      |  |                            |                           |
+      |  |  +----------------------+  |                           |
+      |  |  | AI Model (Target)    |  |                           |
+      |  |  | - Weights Hash       |  |                           |
+      |  |  | - Config             |  |                           |
+      |  |  +----------------------+  |                           |
+      |  +----------------------------+                           |
+      +-----------------------------------------------------------+
+~~~~
+{: #fig-chainoftrust title="Example of a Chain of Trust"}
 
-Figure 1 illustrates the Chain of Trust. The Hardware Root of Trust (RoT) measures the integrity of the Trusted Execution Environment (TEE) or OS. The TEE, acting as a transitive verifier, subsequently measures the AI Agent's model binaries and policy configurations. The resulting EAT token reflects this hierarchy using nested submodules, ensuring that the `ai-model-hash` is reported by a trusted parent rather than the agent itself.
+{{fig-chainoftrust}} illustrates the Chain of Trust. The Hardware Root of Trust (RoT) measures the integrity of the Trusted Execution Environment (TEE) or OS. The TEE, acting as a transitive verifier, subsequently measures the AI Agent's model binaries and policy configurations. The resulting EAT token reflects this hierarchy using nested submodules, ensuring that the `ai-model-hash` is reported by a trusted parent rather than the agent itself.
 
-To clarify the hierarchical trust relationships in multi-owner attestation scenarios, Figure 2 illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per RFC 9711 Section 4.2.18.
+To clarify the hierarchical trust relationships in multi-owner attestation scenarios, {{fig-trustHierarchy}} illustrates the binding of components across hardware, runtime, and AI model layers. Each layer is attested by a distinct owner and represented as a nested submodule within the top-level EAT per RFC 9711 Section 4.2.18.
 
-```
+~~~~
 +-----------------------------------------------------------------+
 |  Top-Level EAT (Platform Attester)                              |
 |  • ueid: Platform hardware identity (e.g., TPM/SE)              |
@@ -291,8 +295,9 @@ To clarify the hierarchical trust relationships in multi-owner attestation scena
 |      }                                                          |
 |  }                                                              |
 +-----------------------------------------------------------------+
-```
-_Figure 2: Trust hierarchy for layered attestation using EAT submods_
+~~~~
+{: #fig-trustHierarchy title="Trust hierarchy for layered attestation using EAT submods"}
+
 
 
 #### **Trust Binding Semantics**
