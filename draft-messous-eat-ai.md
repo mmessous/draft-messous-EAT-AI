@@ -46,7 +46,7 @@ This document defines a profile for the Entity Attestation Token (EAT) to suppor
 
 Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
 
-The Entity Attestation Token (EAT) [RFC9711] provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core [ETSI-GR-ENI-051]).
+The Entity Attestation Token (EAT) [[RFC9711]] provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core [[ETSI-GR-ENI-051]]).
 
 This profile enables verifiers—such as OAuth resource servers, network function orchestrators, or policy enforcement points—to make trust decisions based on verifiable evidence about an agent’s:
 - **Model integrity** (weights, architecture),
@@ -338,11 +338,11 @@ A submodule appraisal failure MUST cause rejection of the entire attestation unl
 
 
 # IANA Considerations
-## EAT Profile Registration
-- IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
 
-Profile Name: Autonomous AI Agent EAT Profile
-Reference: [THIS DOCUMENT]
+## EAT Profile Registration
+IANA is requested to register in the "Entity Attestation Token (EAT) Profiles" registry:
+- Profile Name: Autonomous AI Agent EAT Profile
+- Reference: [THIS DOCUMENT]
 
 ## CWT Claims Registry
 IANA is requested to register the following in the "CBOR Web Token (CWT) Claims" registry [IANA-CWT]:
