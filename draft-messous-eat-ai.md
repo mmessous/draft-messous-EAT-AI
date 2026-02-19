@@ -371,6 +371,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 
 # References
 ## Normative
+
 normative:
  RFC2119:
  RFC7519:
@@ -382,6 +383,7 @@ normative:
  I-D.draft-ietf-rats-eat-measured-component:EAT-M-C
 
 ## Informative:
+
 informative:
  ETSI-GR-ENI-051:
   title: "Architectural Framework for ENI in 6G"
