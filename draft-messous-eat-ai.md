@@ -112,9 +112,9 @@ Examples:
 - The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
 A digest structure is encoded as a two-element array:
 
-~~~~cbor
+~~~cbor
 [ alg, hash ]
-~~~~
+~~~
 
 where:
 - **alg** is the Hash Algorithm Identifier, using either the **integer** or **text string** from the [IANA COSE Algorithms registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms), indicating the hash function used (e.g., '-16' for SHA-256, `-44` for SHA-384, `-45` for SHA3-256).
@@ -134,17 +134,17 @@ The value MAY be:
 
 Example (CBOR):
 
-~~~~
+~~~
 cbor
 / ai-sbom-ref / -75012: "https://example.com/sboms/agent-xyz.spdx.json"
-~~~~
+~~~
 
 Example (embedded digest):
 
-~~~~
+~~~
 cbor
 / ai-sbom-ref / -75012: [ -44, h'abcd1234...' ]  ; SHA-384 digest of SBOM
-~~~~
+~~~
 
 When used, the SBOM SHOULD include:
 - Runtime environment (e.g., Python 3.11, CUDA 12.4),
@@ -174,7 +174,7 @@ To support a user managing multiple agents with varying configurations, we shoul
 The following CWT example shows a platform hosting two agents. Agent 1 is a complex orchestrator using two models, while Agent 2 is a simple worker using only one.
 
 Code snippet
-~~~~
+~~~
 {
 / ueid / 256: h'0102030405060708',  / User/Platform ID /
     / nonce / 10: h'abcdef1234567890', / Freshness Nonce /
@@ -203,7 +203,7 @@ Code snippet
     }
   }
 }
-~~~~
+~~~
 
 ### Multi-Model Agents:
 A single agent utilizing an orchestrator model and task-specific worker models.
@@ -215,7 +215,7 @@ When a model is represented in a submodule, it carries its own instance of `ai-m
 The following example demonstrates an agent employing an orchestrator LLM and a specialized vision model. Note the use of the digest format [alg, val] to support different hash types for each model.
 
 Code snippet
-~~~~
+~~~
 {
   / ueid / 256: h'0102030405060708',
   / nonce / 10: h'abcdef1234567890',
@@ -231,7 +231,7 @@ Code snippet
     }
   }
 }
-~~~~
+~~~
 
 ### Layered Trust:
 Scenarios where different system components (e.g., hardware TEE, OS runtime, and AI model) are owned or managed by different entities.
@@ -396,7 +396,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 
    The following is a CBOR diagnostic notation of an EAT-AI token:
 
-~~~~
+~~~
 {
 / ueid / 256: h'0102030405060708',
 / swname / 270: "execution-agent-v3",
@@ -408,7 +408,7 @@ IANA is requested to register the corresponding JWT claim names in the "JSON Web
 / ai-sbom-ref / -75012: "https://sbom.example.net/agents/slice-opt-v3.spdx.json",
 / nonce / 10: h'abcdef1234567890'
 }
-~~~~
+~~~
 
 
 # Appendix B. Relationship to Existing Standards & Initiatives
