@@ -112,10 +112,9 @@ Examples:
 - The claims `ai-model-hash`, `model-arch-digest`, and `input-policy-digest` represent cryptographic digests of serialized artifacts (e.g., model weights, computational graphs, or policy documents). To support algorithm agility and avoid ambiguity, each such claim is defined as a digest structure rather than a bare byte string.
 A digest structure is encoded as a two-element array:
 
-~~~
-cbor
+``` cbor
 [ alg, hash ]
-~~~
+```
 
 where:
 - **alg** is the Hash Algorithm Identifier, using either the **integer** or **text string** from the [IANA COSE Algorithms registry](https://www.iana.org/assignments/cose/cose.xhtml#algorithms), indicating the hash function used (e.g., '-16' for SHA-256, `-44` for SHA-384, `-45` for SHA3-256).
@@ -135,17 +134,16 @@ The value MAY be:
 
 Example (CBOR):
 
-~~~
-cbor
+
+```cbor
 / ai-sbom-ref / -75012: "https://example.com/sboms/agent-xyz.spdx.json"
-~~~
+```
 
 Example (embedded digest):
 
-~~~
-cbor
+```cbor
 / ai-sbom-ref / -75012: [ -44, h'abcd1234...' ]  ; SHA-384 digest of SBOM
-~~~
+```
 
 When used, the SBOM SHOULD include:
 - Runtime environment (e.g., Python 3.11, CUDA 12.4),
