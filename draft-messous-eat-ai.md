@@ -65,7 +65,7 @@ Traditional SBOMs remain essential to capture the **software supply chain** (e.g
 - **Inference Policy**: Constraints defining the authorized input context (e.g., slice type, geography) under which an agent may operate.
 - **EAT-AI**: The EAT profile defined in this document.
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119] {{RFC8174].
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}}.
 
 # Use Cases
 
