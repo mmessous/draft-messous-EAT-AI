@@ -46,7 +46,7 @@ This document defines a profile for the Entity Attestation Token (EAT) to suppor
 
 Autonomous AI agents—software entities that perceive, reason, and act with minimal human oversight—are deployed across cloud, edge, enterprise, and telecommunications environments. Their autonomy introduces new trust challenges: if an agent’s model is tampered, its training data is non-compliant, or its inference policy is violated, the consequences range from service disruption to regulatory breaches.
 
-The Entity Attestation Token (EAT) {{RFC9711}} provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core [ETSI-GR-ENI-051], 3GPP TS 29.510).
+The Entity Attestation Token (EAT) {{RFC9711}} provides a standardized framework for remote attestation. However, EAT does not define claims specific to AI artifacts. This document fills that gap by specifying a **generic EAT profile for AI agents**, with **optional telecom-specific claims** for use in 5G/6G networks (e.g., ETSI ENI AI-Core {{ETSI-GR-ENI-051}}).
 
 This profile enables verifiers—such as OAuth resource servers, network function orchestrators, or policy enforcement points—to make trust decisions based on verifiable evidence about an agent’s:
 - **Model integrity** (weights, architecture),
@@ -381,33 +381,29 @@ RFC9334:
 RFC8126:
 I-D.draft-ietf-rats-eat-measured-component:EAT-M-C
 
-- [[RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html)] Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.
-- [[RFC7519](https://www.rfc-editor.org/rfc/rfc7519.html)] Jones, M., Bradley, J., and N. Sakimura, "JSON Web Token (JWT)", RFC 7519, DOI 10.17487/RFC7519, May 2015.
-- [[RFC8174](https://www.ietf.org/rfc/rfc8174.html)] Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.
-- [[RFC8392](https://datatracker.ietf.org/doc/html/rfc8392)] Jones, M., et al., "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392, May 2018.
-- [[RFC9711](https://datatracker.ietf.org/doc/html/rfc9711)] L. Lundblade, G. Mandyam,J. O'Donoghue,C. Wallace, "The Entity Attestation Token (EAT)", RFC 9711, DOI 10.17487/RFC9711, April 2025.
-- [[RFC9334](https://datatracker.ietf.org/doc/html/rfc9334)] Birkett, M., et al., "Remote ATtestation ProcedureS (RATS) Architecture", RFC 9334, DOI 10.17487/RFC9334, January 2023.
-- [[RFC8126](https://datatracker.ietf.org/doc/html/rfc8126)] Cotton, M., et al., "Guidelines for Writing an IANA Considerations Section in RFCs", RFC 8126, DOI 10.17487/RFC8126, June 2017.
-- [[EAT Measured Component] (https://datatracker.ietf.org/doc/draft-ietf-rats-eat-measured-component/)] Frost S., et al., "EAT Measured Component", Active Internet-Draft (rats WG).
-
-
 ## Informative:
 
 ETSI-GR-ENI-051:
+   title: "Architectural Framework for ENI in 6G"
+   date: February 2025
+   author:
+       org: ETSI
+   target: https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf
 3GPP-TR-33.898:
+   title: "Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"
+   date: July 2023
+   author:
+       org: 3GPP
+   target:  https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088
 3GPP-TR-33.784:
-
+   title: "Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"
+   date: April 2025
+   author:
+       org: 3GPP
+   target: https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294
 I-D.huang-rats-agentic-eat-cap-attest: Agentic-EAT-CAP
 I-D.draft-ni-wimse-ai-agent-identity: WIMSE-AAI
 I-D.draft-liu-oauth-a2a-profile: OAUTH-Profile
-
-- [[ETSI-GR-ENI-051](https://www.etsi.org/deliver/etsi_gr/ENI/001_099/051/04.01.01_60/gr_ENI051v040101p.pdf)] ETSI, **"Architectural Framework for ENI in 6G"**, GR ENI 051 V4.1.1, February 2025.
-- [[3GPP-TR-33.898](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4088)] 3GPP, **"Study on security and privacy of Artificial Intelligence/Machine Learning (AI/ML)-based services and applications in 5G"**, TR 33.898, V18.0.1  July 2023. 
-- [[3GPP-TR-33.784](https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=4294)] 3GPP, **"Study on security aspects of core network enhanced support for Artificial Intelligence/Machine Learning (AI/ML)"**, TR 33.784 V0.0.0, April 2025. 
-- [[I-D.huang-rats-agentic-eat-cap-attest](https://datatracker.ietf.org/doc/draft-huang-rats-agentic-eat-cap-attest/)] Huang, K., et al., **"Capability Attestation Extensions for the Entity Attestation Token (EAT) in Agentic AI Systems"**, Work in Progress, Internet-Draft, March 2025.
-- [[draft-ni-wimse-ai-agent-identity](https://datatracker.ietf.org/doc/draft-ni-wimse-ai-agent-identity/)] Yuan, N., Liu, P., **"WIMSE Applicability for AI Agents"**, Work in Progress.
-- [[draft-liu-oauth-a2a-profile](https://datatracker.ietf.org/doc/draft-liu-oauth-a2a-profile/)] Liu, P., Yuan, N., **"Agent-to-Agent (A2A) Profile for OAuth Transaction Tokens"**, Work in Progress.
-
 
 # Appendix A. Example EAT-AI Token (CWT)
 
