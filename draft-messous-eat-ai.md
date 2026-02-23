@@ -8,7 +8,7 @@ submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
-v: 2
+v: 01
 # area: SEC
 # workgroup: RATS
 keyword:
